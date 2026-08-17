@@ -18,16 +18,6 @@ window['neutrinos'] = {
 //CORE_REFERENCE_IMPORTS
 //CORE_REFERENCE_IMPORT-claim_intakeComponent
 import { claim_intakeComponent } from '../components/claim_intake.component';
-//CORE_REFERENCE_IMPORT-kldyrnckComponent
-import { kldyrnckComponent } from '../components/kldyrnck.component';
-//CORE_REFERENCE_IMPORT-claimComponent
-import { claimComponent } from '../components/claim.component';
-//CORE_REFERENCE_IMPORT-claim_intake_oneComponent
-import { claim_intake_oneComponent } from '../components/claim_intake_one.component';
-//CORE_REFERENCE_IMPORT-claimPolicyComponent
-import { claimPolicyComponent } from '../components/claimPolicy.component';
-//CORE_REFERENCE_IMPORT-claimsComponent
-import { claimsComponent } from '../components/claims.component';
 
 /**
  * Reads datasource object and injects the datasource object into window object
@@ -62,16 +52,6 @@ export const appDeclarations = [
   //CORE_REFERENCE_PUSH_TO_DEC_ARRAY
   //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-claim_intakeComponent
   claim_intakeComponent,
-  //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-kldyrnckComponent
-  kldyrnckComponent,
-  //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-claimComponent
-  claimComponent,
-  //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-claim_intake_oneComponent
-  claim_intake_oneComponent,
-  //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-claimPolicyComponent
-  claimPolicyComponent,
-  //CORE_REFERENCE_PUSH_TO_DEC_ARRAY-claimsComponent
-  claimsComponent,
 ];
 
 /**
