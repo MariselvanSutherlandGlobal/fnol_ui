@@ -1,0 +1,260 @@
+<div fxLayout="column wrap" fxLayoutAlign="start stretch" [fxShow]="true">
+  <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+    <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h1>
+        First Notice of Loss (FNOL)<p>Motor Insurance Claim Intake.</p>
+      </h1>
+    </div>
+    <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h2>
+        <h2>Policy Search &amp; Policy Context</h2>
+      </h2>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="100" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Search By</mat-label>
+            <mat-select placeholder="Search By" [(ngModel)]="page.searchType" [required]="false" (selectionChange)="onPolicySearchTypeChange()">
+              <ng-template ngFor let-option [ngForOf]="page.policySearchTypes" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field>
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.searchValue" name="policyNumber" type="text" placeholder="{{page.searchTypePlaceholder}}" [required]="true" (blur)="validateField(&apos;policyNumber&apos;)" [disabled]="page.policyLoading" id="policyNumber">
+            <mat-label>{{page.searchTypeLabel}}</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.searchValueError">{{page.searchValueError}}</mat-error>
+        </div><button mat-button style="box-sizing:border-box;padding:8px;" fxFlex="20%" (click)="fetchPolicy()" [disabled]="false">Fetch Policy</button>
+      </div>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="page.policyFetched">
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.policyStatus" name="policyStatus" type="text" placeholder="Policy Status" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="policyStatus">
+            <mat-label>Policy Status</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.policyStartDate" name="policyStartDate" type="text" placeholder="Policy Start Date" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="policyStartDate">
+            <mat-label>Policy Start Date</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.policyEndDate" name="policyEndDate" type="text" placeholder="Policy End Date" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="policyEndDate">
+            <mat-label>Policy End Date</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.insuredName" name="insuredName" type="text" placeholder="Insured" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="insuredName">
+            <mat-label>Insured</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.vehicleRegistration" name="vehicleRegistration" type="text" placeholder="Vehicle Registration" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="vehicleRegistration">
+            <mat-label>Vehicle Registration</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.vehicleMakeModel" name="vehicleMakeModel" type="text" placeholder="Vehicle" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="vehicleMakeModel">
+            <mat-label>Vehicle</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.coverageType" name="coverageType" type="text" placeholder="Coverage Type" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="coverageType">
+            <mat-label>Coverage Type</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.coverageLimit" name="coverageLimit" type="text" placeholder="Coverage Limit" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="coverageLimit">
+            <mat-label>Coverage Limit</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.sumInsured" name="sumInsured" type="text" placeholder="Sum Insured" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="sumInsured">
+            <mat-label>Sum Insured</mat-label>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.excess" name="excess" type="text" placeholder="Excess / Deductible" [required]="true" (blur)="validateTextField($event)" [disabled]="true" id="excess">
+            <mat-label>Excess / Deductible</mat-label>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h3>
+        <h2>Claim &amp; Loss Details</h2>
+      </h3>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Claimant Type</mat-label>
+            <mat-select placeholder="Select Claimant Type" [(ngModel)]="page.claimantType" [required]="true" (selectionChange)="validateField(&apos;claimantType&apos;)" id="claimantType" name="claimantType">
+              <ng-template ngFor let-option [ngForOf]="page.claimantTypes" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.claimantTypeError">{{page.claimantTypeError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;">
+            <mat-label>Loss Date &amp; Time</mat-label>
+            <input matInput placeholder="Loss Date &amp; Time" [matDatepicker]="proposerDOB" (dateChange)="validateField(&apos;lossDate&apos;)" [(ngModel)]="page.lossDate" name="lossDate" [min]="page.proposerMinDOB" [max]="page.today" [required]="true" [disabled]="true">
+            <mat-datepicker-toggle matSuffix [for]="proposerDOB" disabled="false"></mat-datepicker-toggle>
+            <mat-datepicker #proposerDOB id="lossDate" [disabled]="false"></mat-datepicker>
+
+          </mat-form-field><mat-error align *ngIf="page.lossDateError">{{page.lossDateError}}</mat-error>
+        </div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Loss Type</mat-label>
+            <mat-select placeholder="Select Loss Type" [(ngModel)]="page.lossType" [required]="true" (selectionChange)="validateField(&apos;lossType&apos;)" id="lossType" name="lossType">
+              <ng-template ngFor let-option [ngForOf]="page.lossTypes" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.lossTypeError">{{page.lossTypeError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.lossLocation" name="lossLocation" type="text" placeholder="Enter Loss Location" [required]="true" (blur)="validateField(&apos;lossLocation&apos;)" id="lossLocation">
+            <mat-label>Loss Location</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.lossLocationError">{{page.lossLocationError}}</mat-error>
+        </div>
+      </div>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="100" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.lossDescription" name="lossDescription" type="text" placeholder="Minimum 20 characters" [required]="true" (blur)="validateField(&apos;lossDescription&apos;)" id="lossDescription">
+            <mat-label>Loss Description</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.lossDescriptionError">{{page.lossDescriptionError}}</mat-error>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h3>
+        <h2>Driver &amp; Incident Information</h2>
+      </h3>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.driverName" name="driverName" type="text" placeholder="Enter Driver Name" [required]="true" (blur)="validateField(&apos;driverName&apos;)" id="driverName">
+            <mat-label>Driver Name</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.driverNameError">{{page.driverNameError}}</mat-error>
+        </div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Driver Licence Status</mat-label>
+            <mat-select placeholder="Select Driver Licence Status" [(ngModel)]="page.licenceStatus" [required]="true" (selectionChange)="validateField(&apos;licenceStatus&apos;)" id="licenceStatus" name="licenceStatus">
+              <ng-template ngFor let-option [ngForOf]="page.licenceStatuses" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field></div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Vehicle Drivable</mat-label>
+            <mat-select placeholder="Select Vehicle Drivable" [(ngModel)]="page.vehicleDrivable" [required]="true" (selectionChange)="validateField(&apos;vehicleDrivable&apos;)" id="vehicleDrivable" name="vehicleDrivable">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.vehicleDrivableError">{{page.vehicleDrivableError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Third Party Involved</mat-label>
+            <mat-select placeholder="Select Third Party Involved" [(ngModel)]="page.thirdPartyFlag" [required]="true" (selectionChange)="validateField(&apos;thirdPartyFlag&apos;)" id="thirdPartyFlag" name="thirdPartyFlag">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.thirdPartyFlagError">{{page.thirdPartyFlagError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Injury Involved</mat-label>
+            <mat-select placeholder="Select Injury Involved" [(ngModel)]="page.injuryFlag" [required]="true" (selectionChange)="validateField(&apos;injuryFlag&apos;)" id="injuryFlag" name="injuryFlag">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.injuryFlagError">{{page.injuryFlagError}}</mat-error></div>
+      </div>
+    </div>
+    <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h3>
+        <h2>Police / FIR &amp; Supporting Evidence</h2>
+        <p>Provide available police and repair evidence references.</p>
+      </h3>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Police Report / FIR Available</mat-label>
+            <mat-select placeholder="Select Police Report / FIR Available" [(ngModel)]="page.policeReportAvailable" [required]="true" (selectionChange)="onEvidenceChange(&apos;policeReportAvailable&apos;)" id="policeReportAvailable" name="policeReportAvailable">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.policeReportAvailableError">{{page.policeReportAvailableError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.policeReportReference" name="policeReportReference" type="text" placeholder="Required when report is available" [required]="true" (blur)="validateField(&apos;policeReportReference&apos;)" [disabled]="page.policeReportAvailable !== &apos;YES&apos;" id="policeReportReference">
+            <mat-label>Police / FIR Reference</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.policeReportReferenceError">{{page.policeReportReferenceError}}</mat-error>
+        </div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Repair Estimate Available</mat-label>
+            <mat-select placeholder="Select Repair Estimate Available" [(ngModel)]="page.repairEstimateAvailable" [required]="true" (selectionChange)="validateField(&apos;repairEstimateAvailable&apos;)" id="repairEstimateAvailable" name="repairEstimateAvailable">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.repairEstimateAvailableError">{{page.repairEstimateAvailableError}}</mat-error></div>
+        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.evidenceReference" name="evidenceReference" type="text" placeholder="DMS / document reference" [required]="false" (blur)="validateField(&apos;evidenceReference&apos;)" id="evidenceReference">
+            <mat-label>Supporting Evidence Reference</mat-label>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+      <h3>
+        <h2>Estimated Loss &amp; Contact Preference</h2>
+      </h3>
+      <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="40" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.estimatedAmount" name="estimatedAmount" type="number" placeholder="Amount" [required]="true" (blur)="validateField(&apos;estimatedAmount&apos;)" id="estimatedAmount">
+            <mat-label>Estimated Repair / Loss Amount</mat-label>
+          </mat-form-field><mat-error align *ngIf="page.estimatedAmountError">{{page.estimatedAmountError}}</mat-error>
+        </div>
+        <div fxLayout="column wrap" fxFlex="30" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Preferred Contact Type</mat-label>
+            <mat-select placeholder="Select Preferred Contact Type" [(ngModel)]="page.preferredContact" [required]="true" (selectionChange)="validateField(&apos;preferredContact&apos;)" id="preferredContact" name="preferredContact">
+              <ng-template ngFor let-option [ngForOf]="page.preferredContacts" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field><mat-error align *ngIf="page.preferredContactError">{{page.preferredContactError}}</mat-error></div>
+        <div fxLayout="column wrap" class="fnol-col-50 fnol-field" fxFlex="30" fxLayoutAlign="start stretch" [fxShow]="true">
+          <mat-form-field [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
+            <input matInput [(ngModel)]="page.preferredContactValue" name="preferredContactValue" type="text" placeholder="Preferred Contact Value" [required]="false" id=" preferredContactValue">
+
+          </mat-form-field><mat-error align *ngIf="page.preferredContactValueError">{{page.preferredContactValueError}}</mat-error>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true"><button mat-button style="box-sizing:border-box;padding:8px;" fxFlex="20%" (click)="onSubmitClaim()" [disabled]="page.submitting || !page.policyFetched">Submit Claim</button><button mat-button style="box-sizing:border-box;padding:8px;" fxFlex="20%" (click)="clearForm()">Clear</button></div>
+    <h3>
+      <div class="fnol-message fnol-error">{{page.submitError}}</div>
+      <div class="fnol-message fnol-success">{{page.submitMessage}}</div>
+    </h3>
+  </div>
+</div>

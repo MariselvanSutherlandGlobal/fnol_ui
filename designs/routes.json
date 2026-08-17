@@ -1,0 +1,18 @@
+{
+    "routes": [
+        {
+            "path": "claim_intake",
+            "component": "claim_intakeComponent"
+        },
+        {
+            "path": "''",
+            "redirectTo": "claim_intake",
+            "pathMatch": "full",
+            "default": true
+        },
+        {
+            "path": "**",
+            "component": "PageNotFoundComponent"
+        }
+    ]
+}

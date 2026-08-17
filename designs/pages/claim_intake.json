@@ -1,0 +1,922 @@
+[
+    {
+        "id": "sd_claimFnol_20260814",
+        "type": "tab",
+        "createdDate": "2026-08-14T06:19:00.000Z",
+        "label": "claim",
+        "disabled": false,
+        "info": "FNOL SSD UI flow based on supplied Neutrinos UI JSON patterns and FNOL POC.",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_2e3ea1f9ab934935",
+        "type": "PageVariables",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "flow",
+        "name": "fnolPageVariables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "apiBaseUrl",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": "http://localhost:8081/api"
+                }
+            },
+            {
+                "textIp": "policyApiUrl",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "claimApiUrl",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "caseServiceUrl",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "policyNumber",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "policyFetched",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "false"
+                }
+            },
+            {
+                "textIp": "policyLoading",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "false"
+                }
+            },
+            {
+                "textIp": "submitting",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "false"
+                }
+            },
+            {
+                "textIp": "submitted",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "false"
+                }
+            },
+            {
+                "textIp": "today",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "validationErrors",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "{}"
+                }
+            },
+            {
+                "textIp": "coveredPerils",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "[]"
+                }
+            },
+            {
+                "textIp": "currency",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": "INR"
+                }
+            },
+            {
+                "textIp": "submitError",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "submitSuccess",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": "false"
+                }
+            },
+            {
+                "textIp": "submitMessage",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "claimId",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "caseId",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "sd_2e3ea1f9ab934935",
+        "category": "Function",
+        "x": 225,
+        "y": 100,
+        "wires": [
+            [
+                "sd_ffc37ff7978c4422"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_981e8380eaf6440c",
+        "type": "OnInit",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "inputVariables": [],
+        "localVariables": [],
+        "outputVariables": [],
+        "pageVariables": [],
+        "functionName": "sd_981e8380eaf6440c",
+        "category": "Lifecycle Events",
+        "x": 65,
+        "y": 100,
+        "wires": [
+            [
+                "sd_2e3ea1f9ab934935"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_ffc37ff7978c4422",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "initialiseFNOL",
+        "script": "\npage.today=new Date();\npage.policyApiUrl=page.apiBaseUrl+\"/policies\";\npage.claimApiUrl=page.apiBaseUrl+\"/claims\";\npage.caseServiceUrl=page.apiBaseUrl+\"/case-service/cases\";\npage.policyFetched=false;page.policyLoading=false;page.submitting=false;page.submitted=false;page.submitSuccess=false;page.submitError=\"\";page.submitMessage=\"\";page.validationErrors={};\npage.claimantTypes = [\n    {label:\"Policyholder\", value:\"POLICYHOLDER\"},\n    {label:\"Driver\", value:\"DRIVER\"},\n    {label:\"Third Party\", value:\"THIRD_PARTY\"},\n    {label:\"Representative\", value:\"REPRESENTATIVE\"}\n];\n\npage.lossTypes = [\n    {label:\"Collision\", value:\"COLLISION\"},\n    {label:\"Theft\", value:\"THEFT\"},\n    {label:\"Fire\", value:\"FIRE\"},\n    {label:\"Flood\", value:\"FLOOD\"},\n    {label:\"Glass\", value:\"GLASS\"},\n    {label:\"Other\", value:\"OTHER\"}\n];\n\npage.licenceStatuses = [\n    {label:\"Valid\", value:\"VALID\"},\n    {label:\"Expired\", value:\"EXPIRED\"},\n    {label:\"Suspended\", value:\"SUSPENDED\"},\n    {label:\"Unknown\", value:\"UNKNOWN\"}\n];\n\npage.yesNoOptions = [\n    {label:\"Yes\", value:\"YES\"},\n    {label:\"No\", value:\"NO\"}\n];\n\npage.preferredContacts = [\n    {label:\"Email\", value:\"EMAIL\"},\n    {label:\"SMS\", value:\"SMS\"},\n    {label:\"Phone\", value:\"PHONE\"}\n];\n\npage.policySearchTypes = [\n    { label: \"Policy Number\", value: \"POLICY_NUMBER\" },\n    { label: \"Registration Number\", value: \"REGISTRATION_NUMBER\" },\n    { label: \"Customer ID\", value: \"CUSTOMER_ID\" }\n];\npage.searchType = \"POLICY_NUMBER\";\npage.searchTypeLabel = \"Policy Number\";\npage.searchTypePlaceholder = \"Enter Policy Number\";\npage.searchValue = \"\";\npage.searchTypeError = \"\";\npage.searchValueError = \"\";\npage.preferredContactValue = \"\";\npage.preferredContactValueError = \"\";",
+        "functionName": "initialiseFnol",
+        "category": "Function",
+        "x": 385,
+        "y": 100,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_bb887902028c4f93",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "fetchPolicy",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "policyNumber",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": false
+            }
+        ],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "fetchPolicy",
+        "category": "General",
+        "x": 65,
+        "y": 260,
+        "wires": [
+            [
+                "sd_ebc24b520c374612"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_ebc24b520c374612",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "preparePolicyFetch",
+        "script": "const searchType = (\n    bh.input.searchType ||\n    page.searchType ||\n    \"\"\n).toString().trim();\n\nconst searchValue = (\n    bh.input.searchValue ||\n    page.searchValue ||\n    \"\"\n).toString().trim();\n\npage.searchType = searchType;\npage.searchValue = searchValue;\n\npage.searchTypeError = \"\";\npage.searchValueError = \"\";\npage.policyError = \"\";\npage.policyFetched = false;\npage.policyLoading = false;\n\n\n/* -----------------------------------------\n   Validate Search Type\n----------------------------------------- */\n\nif (!searchType) {\n    page.searchTypeError = \"Search Type is required\";\n    \n}\n\nconst validSearchTypes = [\n    \"POLICY_NUMBER\",\n    \"REGISTRATION_NUMBER\",\n    \"CUSTOMER_ID\"\n];\n\nif (validSearchTypes.indexOf(searchType) === -1) {\n    page.searchTypeError = \"Invalid Search Type\";\n    \n}\n\n\n/* -----------------------------------------\n   Validate Search Value\n----------------------------------------- */\n\nif (!searchValue) {\n\n    if (searchType === \"POLICY_NUMBER\") {\n        page.searchValueError = \"Policy Number is required\";\n    }\n    else if (searchType === \"REGISTRATION_NUMBER\") {\n        page.searchValueError = \"Registration Number is required\";\n    }\n    else if (searchType === \"CUSTOMER_ID\") {\n        page.searchValueError = \"Customer ID is required\";\n    }\n    else {\n        page.searchValueError = \"Search Value is required\";\n    }\n\n    \n}\n\n\n/* -----------------------------------------\n   Validate Format\n----------------------------------------- */\n\nif (searchType === \"POLICY_NUMBER\") {\n\n    if (!/^[A-Za-z0-9\\-/]+$/.test(searchValue)) {\n        page.searchValueError = \"Enter a valid policy number\";\n        \n    }\n\n}\nelse if (searchType === \"REGISTRATION_NUMBER\") {\n\n    if (!/^[A-Za-z0-9\\-/ ]+$/.test(searchValue)) {\n        page.searchValueError = \"Enter a valid registration number\";\n        \n    }\n\n}\nelse if (searchType === \"CUSTOMER_ID\") {\n\n    if (!/^[A-Za-z0-9\\-/]+$/.test(searchValue)) {\n        page.searchValueError = \"Enter a valid customer ID\";\n        \n    }\n\n}\n\n\n/* -----------------------------------------\n   Prepare HTTP URL\n----------------------------------------- */\n\npage.policyLoading = true;\n\nbh.local.policyApiUrl =\n    page.apiBaseUrl +\n    \"/policies/search\" +\n    \"?searchType=\" +\n    encodeURIComponent(searchType) +\n    \"&searchValue=\" +\n    encodeURIComponent(searchValue);\n\nconsole.log(\"Policy Search URL:\", bh.local.policyApiUrl);",
+        "functionName": "preparePolicyFetch",
+        "category": "Function",
+        "x": 225,
+        "y": 260,
+        "wires": [
+            [
+                "sd_a90b35cc34ff41bc"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_a90b35cc34ff41bc",
+        "type": "HttpRequest",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "client-pages",
+        "nodeType": "flow",
+        "name": "getPolicy",
+        "method": "get",
+        "methodMapping": "",
+        "methodMappingObj": {},
+        "urlMapping": "bh.local.policyApiUrl",
+        "urlMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "policyApiUrl"
+        },
+        "ret": "json",
+        "retMapping": "",
+        "retMappingObj": {},
+        "observe": "",
+        "observeMapping": "",
+        "observeMappingObj": {},
+        "reportProgress": false,
+        "withCreds": false,
+        "reqBody": "",
+        "reqBodyObj": {
+            "mapVarType": "this.page",
+            "mapVarValue": ""
+        },
+        "resultMapping": "bh.local.response",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "response"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMapping": "",
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMapping": "",
+        "paramMappingObj": {},
+        "functionName": "getPolicy",
+        "category": "HTTP",
+        "x": 390,
+        "y": 260,
+        "wires": [
+            [
+                "sd_4460873e786d46da"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_4460873e786d46da",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "mapPolicyResponse",
+        "script": "page.policyLoading = false;\n\nconst r = bh.local.response || {};\n\nconst policies = Array.isArray(r.policies)\n    ? r.policies\n    : [];\n\nif (!r.success || policies.length === 0) {\n    page.policyFetched = false;\n    page.policyError = \"Policy not found.\";\n    return;\n}\n\nconst p = policies[0];\n\n/* Policy identity */\npage.policyId = p.id || \"\";\npage.policyNumber = p.policyNumber || \"\";\npage.customerId = p.customerId || \"\";\n\n/* Policy details */\npage.policyStatus = p.policyStatus || \"\";\npage.policyStartDate = p.policyStartDate || \"\";\npage.policyEndDate = p.policyEndDate || \"\";\npage.insuredName = p.insuredName || \"\";\n\n/* Vehicle */\npage.vehicleRegistration = p.vehicleRegistration || \"\";\npage.vehicleMake = p.vehicleMake || \"\";\npage.vehicleModel = p.vehicleModel || \"\";\npage.vehicleYear = p.vehicleYear || \"\";\n\npage.vehicleMakeModel =\n    [page.vehicleMake, page.vehicleModel]\n        .filter(function(v) {\n            return v !== null &&\n                   v !== undefined &&\n                   v !== \"\";\n        })\n        .join(\" \");\n\n/* Coverage */\npage.coverageType = p.coverageType || \"\";\n\npage.coveredPerils =\n    Array.isArray(p.coveredPerils)\n        ? p.coveredPerils\n        : [];\n\npage.excess = p.excessAmount ?? \"\";\npage.sumInsured = p.sumInsured ?? \"\";\npage.currency = p.currency || \"INR\";\n\n/* Success */\npage.policyFetched = true;\npage.policyError = \"\";",
+        "functionName": "mapPolicyResponse",
+        "category": "Function",
+        "x": 570,
+        "y": 260,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_e571d2e684304195",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "validateField",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "fieldName",
+                "defaultValue": {
+                    "type": "str",
+                    "value": ""
+                },
+                "output": false
+            }
+        ],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "validateField",
+        "category": "General",
+        "x": 65,
+        "y": 460,
+        "wires": [
+            [
+                "sd_01b5c55809d54805"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_01b5c55809d54805",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "validateFieldScript",
+        "script": "\nconst f=bh.input.fieldName,v=page[f],s=v==null?\"\":v.toString().trim();let e=\"\";\nif(f===\"policyNumber\"&&!s)e=\"Policy Number is required\";\nelse if(f===\"claimantType\"&&!s)e=\"Claimant Type is required\";\nelse if(f===\"lossDate\"){if(!s)e=\"Loss Date & Time is required\";else if(new Date(s)>new Date())e=\"Loss Date & Time cannot be in the future\";else if(page.policyFetched&&page.policyStartDate&&page.policyEndDate&&(new Date(s)<new Date(page.policyStartDate)||new Date(s)>new Date(page.policyEndDate)))e=\"Loss Date & Time must be within the policy period\";}\nelse if(f===\"lossLocation\"&&!s)e=\"Loss Location is required\";\nelse if(f===\"lossType\"&&!s)e=\"Loss Type is required\";\nelse if(f===\"lossDescription\"&&(!s||s.length<20))e=\"Loss Description must contain at least 20 characters\";\nelse if(f===\"driverName\"&&!s)e=\"Driver Name is required\";\nelse if([\"licenceStatus\",\"vehicleDrivable\",\"thirdPartyFlag\",\"injuryFlag\",\"policeReportAvailable\",\"repairEstimateAvailable\",\"preferredContact\"].includes(f)&&!s)e=\"This field is required\";\nelse if(f===\"policeReportReference\"&&page.policeReportAvailable===\"YES\"&&!s)e=\"Police / FIR reference is required\";\nelse if(f===\"estimatedAmount\"&&!(Number(v)>0))e=\"Estimated Repair / Loss Amount must be greater than 0\";\npage[f+\"Error\"]=e;page.validationErrors[f]=e;\n",
+        "functionName": "validateFieldScript",
+        "category": "Function",
+        "x": 220,
+        "y": 460,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_01ae401dbb1b4b98",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "onEvidenceChange",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "fieldName",
+                "defaultValue": {
+                    "type": "str",
+                    "value": ""
+                },
+                "output": false
+            }
+        ],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "onEvidenceChange",
+        "category": "General",
+        "x": 65,
+        "y": 560,
+        "wires": [
+            [
+                "sd_c2686ed2fff44cdb"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_c2686ed2fff44cdb",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "onEvidenceChangeScript",
+        "script": "\nif(bh.input.fieldName===\"policeReportAvailable\"&&page.policeReportAvailable!==\"YES\"){page.policeReportReference=\"\";page.policeReportReferenceError=\"\";}\npage[bh.input.fieldName+\"Error\"]=\"\";\n",
+        "functionName": "onEvidenceChangeScript",
+        "category": "Function",
+        "x": 220,
+        "y": 560,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_5f24f8085d354b99",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "onSubmitClaim",
+        "outputs": 1,
+        "inputVariables": [],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "onSubmitClaim",
+        "category": "General",
+        "x": 65,
+        "y": 720,
+        "wires": [
+            [
+                "sd_c41af14917bd472b"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_c41af14917bd472b",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "validateFNOLSubmit",
+        "script": "page.submitted = false;\npage.submitError = \"\";\npage.submitSuccess = false;\n\nif (!page.validationErrors) {\n    page.validationErrors = {};\n}\n\npage.validationErrors = {};\n\nlet valid = true;\n\nfunction setError(field, message) {\n\n    page[field + \"Error\"] = message || \"\";\n    page.validationErrors[field] = message || \"\";\n\n    if (message) {\n        valid = false;\n    }\n}\n\n\n/* Clear previous errors */\n\nconst fields = [\n    \"policyNumber\",\n    \"claimantType\",\n    \"lossDate\",\n    \"lossLocation\",\n    \"lossType\",\n    \"lossDescription\",\n    \"driverName\",\n    \"licenceStatus\",\n    \"vehicleDrivable\",\n    \"thirdPartyFlag\",\n    \"injuryFlag\",\n    \"policeReportAvailable\",\n    \"policeReportReference\",\n    \"estimatedAmount\",\n    \"preferredContact\",\n    \"preferredContactValue\"\n];\n\nfields.forEach(function(field) {\n    page[field + \"Error\"] = \"\";\n});\n\n\n/* Policy */\n\nconst policyNumber =\n    (page.policyNumber || \"\").toString().trim();\n\nif (!policyNumber) {\n\n    setError(\n        \"policyNumber\",\n        \"Policy Number is required\"\n    );\n\n}\nelse if (!page.policyFetched || !page.policyId) {\n\n    setError(\n        \"policyNumber\",\n        \"Fetch a valid policy before submitting\"\n    );\n\n}\n\n\n/* Claimant */\n\nconst claimantType =\n    (page.claimantType || \"\").toString().trim();\n\nconst validClaimantTypes = [\n    \"POLICYHOLDER\",\n    \"DRIVER\",\n    \"THIRD_PARTY\",\n    \"REPRESENTATIVE\"\n];\n\nif (!claimantType) {\n\n    setError(\n        \"claimantType\",\n        \"Claimant Type is required\"\n    );\n\n}\nelse if (\n    validClaimantTypes.indexOf(claimantType) === -1\n) {\n\n    setError(\n        \"claimantType\",\n        \"Select a valid Claimant Type\"\n    );\n\n}\n\n\n/* Loss Date */\n\nif (!page.lossDate) {\n\n    setError(\n        \"lossDate\",\n        \"Loss Date & Time is required\"\n    );\n\n}\nelse {\n\n    const lossDate = new Date(page.lossDate);\n\n    if (isNaN(lossDate.getTime())) {\n\n        setError(\n            \"lossDate\",\n            \"Enter a valid Loss Date & Time\"\n        );\n\n    }\n    else if (lossDate > new Date()) {\n\n        setError(\n            \"lossDate\",\n            \"Loss Date & Time cannot be in the future\"\n        );\n\n    }\n    else if (\n        page.policyStartDate &&\n        page.policyEndDate &&\n        (\n            lossDate < new Date(page.policyStartDate) ||\n            lossDate > new Date(page.policyEndDate)\n        )\n    ) {\n\n        setError(\n            \"lossDate\",\n            \"Loss Date & Time must be within the policy period\"\n        );\n\n    }\n\n}\n\n\n/* Loss Location */\n\nif (!(page.lossLocation || \"\").toString().trim()) {\n\n    setError(\n        \"lossLocation\",\n        \"Loss Location is required\"\n    );\n\n}\n\n\n/* Loss Type */\n\nconst validLossTypes = [\n    \"COLLISION\",\n    \"THEFT\",\n    \"FIRE\",\n    \"FLOOD\",\n    \"GLASS\",\n    \"OTHER\"\n];\n\nif (!page.lossType) {\n\n    setError(\n        \"lossType\",\n        \"Loss Type is required\"\n    );\n\n}\nelse if (\n    validLossTypes.indexOf(page.lossType) === -1\n) {\n\n    setError(\n        \"lossType\",\n        \"Select a valid Loss Type\"\n    );\n\n}\n\n\n/* Loss Description */\n\nconst description =\n    (page.lossDescription || \"\").toString().trim();\n\nif (!description) {\n\n    setError(\n        \"lossDescription\",\n        \"Loss Description is required\"\n    );\n\n}\nelse if (description.length < 20) {\n\n    setError(\n        \"lossDescription\",\n        \"Loss Description must contain at least 20 characters\"\n    );\n\n}\n\n\n/* Driver */\n\nif (!(page.driverName || \"\").toString().trim()) {\n\n    setError(\n        \"driverName\",\n        \"Driver Name is required\"\n    );\n\n}\n\n\n/* Licence */\n\nconst validLicenceStatuses = [\n    \"VALID\",\n    \"EXPIRED\",\n    \"SUSPENDED\",\n    \"UNKNOWN\"\n];\n\nif (!page.licenceStatus) {\n\n    setError(\n        \"licenceStatus\",\n        \"Licence Status is required\"\n    );\n\n}\nelse if (\n    validLicenceStatuses.indexOf(page.licenceStatus) === -1\n) {\n\n    setError(\n        \"licenceStatus\",\n        \"Select a valid Licence Status\"\n    );\n\n}\n\n\n/* Yes / No fields */\n\nconst yesNoFields = [\n    \"vehicleDrivable\",\n    \"thirdPartyFlag\",\n    \"injuryFlag\",\n    \"policeReportAvailable\"\n];\n\nyesNoFields.forEach(function(field) {\n\n    if (\n        page[field] !== \"YES\" &&\n        page[field] !== \"NO\"\n    ) {\n\n        setError(\n            field,\n            \"Select Yes or No\"\n        );\n\n    }\n\n});\n\n\n/* Police reference */\n\nif (page.policeReportAvailable === \"YES\") {\n\n    if (\n        !(page.policeReportReference || \"\")\n            .toString()\n            .trim()\n    ) {\n\n        setError(\n            \"policeReportReference\",\n            \"Police / FIR reference is required\"\n        );\n\n    }\n\n}\nelse {\n\n    page.policeReportReference = \"\";\n\n}\n\n\n/* Estimated Amount */\n\nconst amount =\n    Number(page.estimatedAmount);\n\nif (\n    page.estimatedAmount === null ||\n    page.estimatedAmount === undefined ||\n    page.estimatedAmount === \"\"\n) {\n\n    setError(\n        \"estimatedAmount\",\n        \"Estimated Loss Amount is required\"\n    );\n\n}\nelse if (!isFinite(amount) || amount <= 0) {\n\n    setError(\n        \"estimatedAmount\",\n        \"Estimated Loss Amount must be greater than 0\"\n    );\n\n}\n\n\n/* Preferred Contact */\n\nconst validContacts = [\n    \"EMAIL\",\n    \"SMS\",\n    \"PHONE\"\n];\n\nif (!page.preferredContact) {\n\n    setError(\n        \"preferredContact\",\n        \"Preferred Contact is required\"\n    );\n\n}\nelse if (\n    validContacts.indexOf(page.preferredContact) === -1\n) {\n\n    setError(\n        \"preferredContact\",\n        \"Select a valid Preferred Contact\"\n    );\n\n}\n\n\n/* Preferred Contact Value */\n\nconst contactValue =\n    (page.preferredContactValue || \"\")\n        .toString()\n        .trim();\n\nif (!contactValue) {\n\n    setError(\n        \"preferredContactValue\",\n        \"Preferred Contact Value is required\"\n    );\n\n}\nelse if (page.preferredContact === \"PHONE\" ||\n         page.preferredContact === \"SMS\") {\n\n    if (!/^[0-9]{10}$/.test(contactValue)) {\n\n        setError(\n            \"preferredContactValue\",\n            \"Enter a valid 10-digit mobile number\"\n        );\n\n    }\n\n}\nelse if (page.preferredContact === \"EMAIL\") {\n\n    if (\n        !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contactValue)\n    ) {\n\n        setError(\n            \"preferredContactValue\",\n            \"Enter a valid email address\"\n        );\n\n    }\n\n}\n\n\n/* Final */\n\nbh.local.isValid = valid;\n\nif (!valid) {\n\n    page.submitError =\n        \"Please correct the highlighted fields before submitting.\";\n\n    page.submitting = false;\n\n}\n\nconsole.log('claim form is valid', bh.local.isValid);\n/* Validation successful */\n\npage.submitted = true;\npage.submitting = true;\npage.submitError = \"\";",
+        "functionName": "validateFNOLSubmit",
+        "category": "Function",
+        "x": 220,
+        "y": 720,
+        "wires": [
+            [
+                "sd_3e6c1de382874126"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_3e6c1de382874126",
+        "type": "PageSwitch",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "FNOL Validation Switch",
+        "property": "isValid",
+        "propertyType": "bh.local",
+        "propertyGv": "bh.local.isValid",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "functionName": "sd_3e6c1de382874126",
+        "category": "Function",
+        "x": 390,
+        "y": 720,
+        "wires": [
+            [
+                "sd_8dff369377c645bf"
+            ],
+            [
+                "sd_f6dbcc990bee4fda"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_8dff369377c645bf",
+        "type": "SnackBar",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "client-pages",
+        "nodeType": "flow",
+        "name": "Validation Message",
+        "message": {
+            "type": "this.page",
+            "value": "submitError"
+        },
+        "action": {
+            "type": "str",
+            "value": "Close"
+        },
+        "duration": {
+            "type": "num",
+            "value": "3000"
+        },
+        "horizontalPosition": "end",
+        "horizontalPositionMap": "",
+        "verticalPosition": "top",
+        "verticalPositionMap": "",
+        "panelClass": {
+            "type": "str",
+            "value": ""
+        },
+        "direction": "ltr",
+        "functionName": "sd_8dff369377c645bf",
+        "category": "General",
+        "x": 560,
+        "y": 660,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_f6dbcc990bee4fda",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareClaimRequest",
+        "script": "page.requestBody = {\n\n    policyId: Number(page.policyId),\n\n    claimantType:\n        page.claimantType,\n\n    lossDateTime:\n        page.lossDate,\n\n    lossLocation:\n        (page.lossLocation || \"\").toString().trim(),\n\n    lossType:\n        page.lossType,\n\n    lossDescription:\n        (page.lossDescription || \"\").toString().trim(),\n\n    driverName:\n        (page.driverName || \"\").toString().trim(),\n\n    driverLicenceStatus:\n        page.licenceStatus,\n\n    policeReportAvailable:\n        page.policeReportAvailable === \"YES\",\n\n    policeReportReference:\n        page.policeReportAvailable === \"YES\"\n            ? (page.policeReportReference || \"\").toString().trim()\n            : \"\",\n\n    repairEstimateAvailable:\n        page.repairEstimateAvailable === \"YES\",\n\n    estimatedLossAmount:\n        Number(page.estimatedAmount),\n\n    currency:\n        page.currency || \"INR\",\n\n    vehicleDrivable:\n        page.vehicleDrivable === \"YES\",\n\n    thirdPartyInvolved:\n        page.thirdPartyFlag === \"YES\",\n\n    injuryInvolved:\n        page.injuryFlag === \"YES\",\n\n    preferredContactMethod:\n        page.preferredContact,\n\n    preferredContactValue:\n        (page.preferredContactValue || \"\").toString().trim(),\n\n    createdBy:\n        page.createdBy || \"FNOL_USER\"\n};",
+        "functionName": "prepareClaimRequest",
+        "category": "Function",
+        "x": 560,
+        "y": 760,
+        "wires": [
+            [
+                "sd_e6bfd4bce5424a57"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_e6bfd4bce5424a57",
+        "type": "HttpRequest",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "client-pages",
+        "nodeType": "flow",
+        "name": "postClaim",
+        "method": "post",
+        "methodMapping": "",
+        "methodMappingObj": {},
+        "urlMapping": "this.page.claimApiUrl",
+        "urlMappingObj": {
+            "mapVarType": "this.page",
+            "mapVarValue": "claimApiUrl"
+        },
+        "ret": "json",
+        "retMapping": "",
+        "retMappingObj": {},
+        "observe": "",
+        "observeMapping": "",
+        "observeMappingObj": {},
+        "reportProgress": false,
+        "withCreds": false,
+        "reqBody": "this.page.requestBody",
+        "reqBodyObj": {
+            "mapVarType": "this.page",
+            "mapVarValue": "requestBody"
+        },
+        "resultMapping": "bh.local.response",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "response"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMapping": "",
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMapping": "",
+        "paramMappingObj": {},
+        "functionName": "postClaim",
+        "category": "HTTP",
+        "x": 760,
+        "y": 760,
+        "wires": [
+            [
+                "sd_086df7b2086e48b3"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_086df7b2086e48b3",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "handleClaimResponse",
+        "script": "console.log(\"========== CLAIM RESPONSE ==========\");\nconsole.log(\"Claim Response:\", bh.local.response);\n\npage.submitting = false;\npage.submitSuccess = false;\npage.submitMessage = \"\";\n\nconst r = bh.local.response || {};\n\n/* =========================================================\n   API FAILURE\n   ========================================================= */\n\nif (!r.success) {\n\n    page.submitSuccess = false;\n\n    page.submitMessage =\n        r.message ||\n        \"Claim submission failed.\";\n\n    console.error(\n        \"Claim submission failed:\",\n        r\n    );\n\n}else {\n\n/* =========================================================\n   CLAIM RESPONSE\n   ========================================================= */\n\nconst claim = r.claim || {};\nconst evidence = r.evidence || {};\n\n/* =========================================================\n   CLAIM DETAILS\n   ========================================================= */\n\npage.claimId =\n    claim.claimId || \"\";\n\npage.claimNumber =\n    claim.claimNumber || \"\";\n\npage.claimPolicyId =\n    claim.policyId || page.policyId || \"\";\n\npage.claimStatus =\n    claim.status || \"\";\n\npage.claimCreatedAt =\n    claim.createdAt || \"\";\n\n/* =========================================================\n   EVIDENCE DETAILS\n   ========================================================= */\n\npage.evidenceTotal =\n    Number(evidence.total || 0);\n\npage.evidenceUploaded =\n    Number(evidence.uploaded || 0);\n\npage.evidenceFailed =\n    Number(evidence.failed || 0);\n\n/* =========================================================\n   SUCCESS\n   ========================================================= */\n\npage.submitSuccess = true;\npage.submitMessage = \"Claim submitted successfully.\";\n\nconsole.log(\"Claim submitted successfully.\");\nconsole.log(\"Claim ID:\", page.claimId);\nconsole.log(\"Claim Number:\", page.claimNumber);\nconsole.log(\"Claim Status:\", page.claimStatus);\nconsole.log(\"Created At:\", page.claimCreatedAt);\n\nconsole.log(\"Evidence Total:\", page.evidenceTotal);\nconsole.log(\"Evidence Uploaded:\", page.evidenceUploaded);\nconsole.log(\"Evidence Failed:\", page.evidenceFailed);\n\nconsole.log(\"====================================\");\n}",
+        "functionName": "handleClaimResponse",
+        "category": "Function",
+        "x": 925,
+        "y": 760,
+        "wires": [
+            [
+                "sd_b9jrxXo3v3p15rgI"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_f9ff2fb9415c473f",
+        "type": "HttpRequest",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "client-pages",
+        "nodeType": "flow",
+        "name": "createCase",
+        "method": "post",
+        "methodMapping": "",
+        "methodMappingObj": {},
+        "urlMapping": "bh.local.caseServiceUrl",
+        "urlMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "caseServiceUrl"
+        },
+        "ret": "json",
+        "retMapping": "",
+        "retMappingObj": {},
+        "observe": "",
+        "observeMapping": "",
+        "observeMappingObj": {},
+        "reportProgress": false,
+        "withCreds": false,
+        "reqBody": "bh.local.caseRequestBody",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "caseRequestBody"
+        },
+        "resultMapping": "bh.local.response",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "response"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMapping": "",
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMapping": "",
+        "paramMappingObj": {},
+        "functionName": "createCase",
+        "category": "HTTP",
+        "x": 1065,
+        "y": 900,
+        "wires": [
+            [
+                "sd_6aa121c834354659"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_6aa121c834354659",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "handleCaseResponse",
+        "script": "\nconst r=bh.local.response||{},d=r.data||r.payload||r;page.caseId=(d&&(d.caseId||d.id||d.correlationId))||\"\";page.submitting=false;page.submitSuccess=true;page.submitMessage=page.caseId?(\"Claim \"+page.claimId+\" submitted successfully. Case \"+page.caseId+\" created.\"):(\"Claim \"+page.claimId+\" submitted successfully and sent to BPM.\");\n",
+        "functionName": "handleCaseResponse",
+        "category": "Function",
+        "x": 1245,
+        "y": 900,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_b09bbaff38024522",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "clearForm",
+        "outputs": 1,
+        "inputVariables": [],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "clearForm",
+        "category": "General",
+        "x": 65,
+        "y": 900,
+        "wires": [
+            [
+                "sd_22d752e29c2243e7"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_22d752e29c2243e7",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "clearFNOLForm",
+        "script": "\nconst api=page.apiBaseUrl;[\"policyNumber\",\"claimantType\",\"lossDate\",\"lossLocation\",\"lossType\",\"lossDescription\",\"driverName\",\"licenceStatus\",\"vehicleDrivable\",\"thirdPartyFlag\",\"injuryFlag\",\"policeReportAvailable\",\"policeReportReference\",\"repairEstimateAvailable\",\"evidenceReference\",\"estimatedAmount\",\"preferredContact\"].forEach(k=>{page[k]=\"\";page[k+\"Error\"]=\"\";});[\"policyStatus\",\"policyStartDate\",\"policyEndDate\",\"insuredName\",\"vehicleRegistration\",\"vehicleMakeModel\",\"coverageType\",\"coverageLimit\",\"sumInsured\",\"excess\",\"claimId\",\"caseId\"].forEach(k=>page[k]=\"\");page.coveredPerils=[];page.policyFetched=false;page.policyLoading=false;page.submitting=false;page.submitSuccess=false;page.submitError=\"\";page.submitMessage=\"\";page.validationErrors={};page.apiBaseUrl=api;\n",
+        "functionName": "clearFNOLForm",
+        "category": "Function",
+        "x": 220,
+        "y": 900,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_22b10997ad734683",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "frontendCatchScript",
+        "script": "\npage.submitting=false;page.policyLoading=false;const msg=(bh.error&&(bh.error.message||bh.error.error))||\"Unexpected technical error.\";if(page.submitted)page.submitError=msg;else page.policyError=msg;\n",
+        "functionName": "frontendCatchScript",
+        "category": "Function",
+        "x": 900,
+        "y": 560,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_39ba1be2aec84dbd",
+        "type": "Catch",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "catchFrontend",
+        "selectedNodes": "all-nodes",
+        "selectCatchType": "allnodes",
+        "masternodeList": "",
+        "ignoreList": [
+            "sd_22b10997ad734683"
+        ],
+        "functionName": "sd_39ba1be2aec84dbd",
+        "category": "General",
+        "x": 760,
+        "y": 560,
+        "wires": [
+            [
+                "sd_22b10997ad734683"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_4yRBINKXggckPJ2R",
+        "type": "PageStart",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "pages",
+        "nodeType": "start",
+        "name": "onPolicySearchTypeChange",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "policySearchType",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": false
+            }
+        ],
+        "localVariables": [],
+        "flow_type": "sync",
+        "functionName": "onPolicySearchTypeChange",
+        "category": "General",
+        "x": 65,
+        "y": 1080,
+        "wires": [
+            [
+                "sd_K5bhn8ynIefZ3pNB"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "claim_intakeComponent"
+    },
+    {
+        "id": "sd_K5bhn8ynIefZ3pNB",
+        "type": "Script",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Search Type change script",
+        "script": "const type = page.searchType;\n\nif (type === \"POLICY_NUMBER\") {\n    page.searchTypeLabel = \"Policy Number\";\n    page.searchTypePlaceholder = \"Enter Policy Number\";\n}\nelse if (type === \"REGISTRATION_NUMBER\") {\n    page.searchTypeLabel = \"Registration Number\";\n    page.searchTypePlaceholder = \"Enter Registration Number\";\n}\nelse if (type === \"CUSTOMER_ID\") {\n    page.searchTypeLabel = \"Customer ID\";\n    page.searchTypePlaceholder = \"Enter Customer ID\";\n}\n\npage.searchValue = \"\";\npage.searchError = \"\";\npage.policyFetched = false;",
+        "functionName": "searchTypeChangeScript",
+        "category": "Function",
+        "x": 240,
+        "y": 1080,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    },
+    {
+        "id": "sd_b9jrxXo3v3p15rgI",
+        "type": "SnackBar",
+        "z": "sd_claimFnol_20260814",
+        "viewType": "client-pages",
+        "nodeType": "flow",
+        "name": "Success Claim Message",
+        "message": {
+            "type": "this.page",
+            "value": "submitMessage"
+        },
+        "action": {
+            "type": "str",
+            "value": "Close"
+        },
+        "duration": {
+            "type": "num",
+            "value": "3000"
+        },
+        "horizontalPosition": "end",
+        "verticalPosition": "top",
+        "panelClass": {
+            "type": "str",
+            "value": ""
+        },
+        "direction": "ltr",
+        "functionName": "successClaimMessage",
+        "category": "General",
+        "x": 1065,
+        "y": 760,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "claim_intakeComponent",
+        "generated": true
+    }
+]

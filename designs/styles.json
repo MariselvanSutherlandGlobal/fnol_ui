@@ -1,0 +1,26 @@
+{
+    "classes": [
+        "fnol-page",
+        "fnol-header",
+        "fnol-title",
+        "fnol-subtitle",
+        "fnol-section",
+        "fnol-section-title",
+        "fnol-row",
+        "fnol-field",
+        "fnol-field-wide",
+        "fnol-policy-search-field",
+        "fnol-policy-search-action",
+        "fnol-error",
+        "fnol-actions",
+        "fnol-policy-card",
+        "fnol-policy-item",
+        "fnol-policy-label",
+        "fnol-policy-value",
+        "fnol-message",
+        "fnol-error-message",
+        "fnol-success-message",
+        "fnol-loading",
+        "fnol-hidden"
+    ]
+}

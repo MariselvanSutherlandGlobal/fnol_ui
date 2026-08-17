@@ -1,0 +1,13 @@
+{
+    "displayName": "FNOL-ui",
+    "appName": "fnol-ui",
+    "description": "ui for fnol",
+    "lastModified": "2026-08-13T01:03:24.585Z",
+    "imgSourcePath": "",
+    "version": "1.0.0",
+    "appType": "uiOnly",
+    "templateName": "blank",
+    "createDate": "2026-08-13T01:03:24.132Z",
+    "analyticsId": "14839752-e670-5827-4d9c-fd51b3dbff3d",
+    "createdStudioVersion": "9.3.0"
+}
