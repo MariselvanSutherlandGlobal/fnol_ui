@@ -25,7 +25,7 @@
                 "textIp": "apiBaseUrl",
                 "typedIpValue": {
                     "type": "str",
-                    "value": "http://localhost:8081/api"
+                    "value": "https://fnolapi.neutrinos-apps.com/api"
                 }
             },
             {
@@ -596,7 +596,6 @@
         "nodeType": "flow",
         "name": "postClaim",
         "method": "post",
-        "methodMapping": "",
         "methodMappingObj": {},
         "urlMapping": "this.page.claimApiUrl",
         "urlMappingObj": {
@@ -604,10 +603,8 @@
             "mapVarValue": "claimApiUrl"
         },
         "ret": "json",
-        "retMapping": "",
         "retMappingObj": {},
         "observe": "",
-        "observeMapping": "",
         "observeMappingObj": {},
         "reportProgress": false,
         "withCreds": false,
@@ -623,11 +620,9 @@
         },
         "headers": {},
         "headersObj": [],
-        "headerMapping": "",
         "headerMappingObj": {},
         "params": {},
         "paramsObj": [],
-        "paramMapping": "",
         "paramMappingObj": {},
         "functionName": "postClaim",
         "category": "HTTP",
@@ -901,7 +896,9 @@
             "value": "3000"
         },
         "horizontalPosition": "end",
+        "horizontalPositionMap": "",
         "verticalPosition": "top",
+        "verticalPositionMap": "",
         "panelClass": {
             "type": "str",
             "value": ""

@@ -151,7 +151,7 @@ export class claim_intakeComponent {
 
   sd_2e3ea1f9ab934935(bh) {
     try {
-      this.page.apiBaseUrl = 'http://localhost:8081/api';
+      this.page.apiBaseUrl = 'https://fnolapi.neutrinos-apps.com/api';
       this.page.policyApiUrl = undefined;
       this.page.claimApiUrl = undefined;
       this.page.caseServiceUrl = undefined;
