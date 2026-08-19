@@ -1665,22 +1665,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -1746,7 +1730,7 @@
                                 "_attrDef": "p"
                             }
                         ],
-                        "7980e698-95a6-44ca-8478-46dfa779cf77": {
+                        "b7459b5e-29b6-b559-3c2c-5bcd0ebc07c9": {
                             "paletteKey": "NG-Input",
                             "parentEditorKey": "44644a05-94c8-4639-baeb-87044f5b5157",
                             "isAdvancedComponent": true,
@@ -1779,13 +1763,13 @@
                                 },
                                 {
                                     "_key": "[appearance]",
-                                    "_value": "",
+                                    "_value": "'legacy'",
                                     "_type": "a",
                                     "_attrDef": "p"
                                 },
                                 {
                                     "_key": "[required]",
-                                    "_value": "true",
+                                    "_value": "false",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
@@ -1866,7 +1850,7 @@
                                 },
                                 {
                                     "_key": "Label",
-                                    "_value": "Policy Start Date",
+                                    "_value": "",
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
@@ -1912,22 +1896,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -2159,22 +2127,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -2406,22 +2358,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -2653,22 +2589,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -2900,22 +2820,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -3147,22 +3051,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -3394,22 +3282,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -3641,22 +3513,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -3888,22 +3744,6 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
-                                    "_value": "validateTextField($event)",
-                                    "_type": "kv",
-                                    "_attrDef": "c",
-                                    "_customAttributeFlag": "flowpicker",
-                                    "objValue": {
-                                        "nodeID": "sd_hR0mGdLP4dN0f6KE",
-                                        "functionName": "validateTextField",
-                                        "activeTree": "pages",
-                                        "z": "sd_iHZOrnOzA5nzuGTg",
-                                        "input": [
-                                            "$event"
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -5555,7 +5395,7 @@
                                 },
                                 {
                                     "_key": "(selectionChange)",
-                                    "_value": "validateField('lossLocation')",
+                                    "_value": "validateField(lossLocation)",
                                     "_type": "kv",
                                     "_attrDef": "p",
                                     "_customAttributeFlag": "flowpicker",

@@ -103,21 +103,6 @@ export class claim_intakeComponent {
     }
   }
 
-  onSubmitClaim(...others) {
-    let bh: any = {};
-    try {
-      bh = this.__page_injector__
-        .get(SDPageCommonService)
-        .constructFlowObject(this);
-      bh.input = {};
-      bh.local = {};
-      bh = this.validateFNOLSubmit(bh);
-      //appendnew_next_onSubmitClaim
-    } catch (e) {
-      return this.errorHandler(bh, e, 'sd_5f24f8085d354b99');
-    }
-  }
-
   clearForm(...others) {
     let bh: any = {};
     try {
@@ -145,6 +130,36 @@ export class claim_intakeComponent {
       //appendnew_next_onPolicySearchTypeChange
     } catch (e) {
       return this.errorHandler(bh, e, 'sd_4yRBINKXggckPJ2R');
+    }
+  }
+
+  onSubmitClaim(...others) {
+    let bh: any = {};
+    try {
+      bh = this.__page_injector__
+        .get(SDPageCommonService)
+        .constructFlowObject(this);
+      bh.input = {};
+      bh.local = {};
+      bh = this.validateFNOLSubmit(bh);
+      //appendnew_next_onSubmitClaim
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_N9xKhDrPt59zmPcI');
+    }
+  }
+
+  validateTextField(fieldName = '', ...others) {
+    let bh: any = {};
+    try {
+      bh = this.__page_injector__
+        .get(SDPageCommonService)
+        .constructFlowObject(this);
+      bh.input = { fieldName };
+      bh.local = {};
+      bh = this.validateTextFieldScript(bh);
+      //appendnew_next_validateTextField
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_gmQdzuuvDcZ1i3wO');
     }
   }
   //appendnew_flow_claim_intakeComponent_start
@@ -1041,6 +1056,107 @@ export class claim_intakeComponent {
     }
   }
 
+  clearFNOLForm(bh) {
+    try {
+      const page = this.page;
+      const api = page.apiBaseUrl;
+      [
+        'policyNumber',
+        'claimantType',
+        'lossDate',
+        'lossLocation',
+        'lossType',
+        'lossDescription',
+        'driverName',
+        'licenceStatus',
+        'vehicleDrivable',
+        'thirdPartyFlag',
+        'injuryFlag',
+        'policeReportAvailable',
+        'policeReportReference',
+        'repairEstimateAvailable',
+        'evidenceReference',
+        'estimatedAmount',
+        'preferredContact',
+      ].forEach((k) => {
+        page[k] = '';
+        page[k + 'Error'] = '';
+      });
+      [
+        'policyStatus',
+        'policyStartDate',
+        'policyEndDate',
+        'insuredName',
+        'vehicleRegistration',
+        'vehicleMakeModel',
+        'coverageType',
+        'coverageLimit',
+        'sumInsured',
+        'excess',
+        'claimId',
+        'caseId',
+      ].forEach((k) => (page[k] = ''));
+      page.coveredPerils = [];
+      page.policyFetched = false;
+      page.policyLoading = false;
+      page.submitting = false;
+      page.submitSuccess = false;
+      page.submitError = '';
+      page.submitMessage = '';
+      page.validationErrors = {};
+      page.apiBaseUrl = api;
+
+      //appendnew_next_clearFNOLForm
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_22d752e29c2243e7');
+    }
+  }
+
+  frontendCatchScript(bh) {
+    try {
+      const page = this.page;
+      page.submitting = false;
+      page.policyLoading = false;
+      const msg =
+        (bh.error && (bh.error.message || bh.error.error)) ||
+        'Unexpected technical error.';
+      if (page.submitted) page.submitError = msg;
+      else page.policyError = msg;
+
+      //appendnew_next_frontendCatchScript
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_22b10997ad734683');
+    }
+  }
+
+  searchTypeChangeScript(bh) {
+    try {
+      const page = this.page;
+      const type = page.searchType;
+
+      if (type === 'POLICY_NUMBER') {
+        page.searchTypeLabel = 'Policy Number';
+        page.searchTypePlaceholder = 'Enter Policy Number';
+      } else if (type === 'REGISTRATION_NUMBER') {
+        page.searchTypeLabel = 'Registration Number';
+        page.searchTypePlaceholder = 'Enter Registration Number';
+      } else if (type === 'CUSTOMER_ID') {
+        page.searchTypeLabel = 'Customer ID';
+        page.searchTypePlaceholder = 'Enter Customer ID';
+      }
+
+      page.searchValue = '';
+      page.searchError = '';
+      page.policyFetched = false;
+      //appendnew_next_searchTypeChangeScript
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_K5bhn8ynIefZ3pNB');
+    }
+  }
+
   validateFNOLSubmit(bh) {
     try {
       const page = this.page;
@@ -1148,17 +1264,22 @@ export class claim_intakeComponent {
           setError('lossDate', 'Enter a valid Loss Date & Time');
         } else if (lossDate > new Date()) {
           setError('lossDate', 'Loss Date & Time cannot be in the future');
-        } else if (
-          page.policyStartDate &&
-          page.policyEndDate &&
-          (lossDate < new Date(page.policyStartDate) ||
-            lossDate > new Date(page.policyEndDate))
-        ) {
-          setError(
-            'lossDate',
-            'Loss Date & Time must be within the policy period'
-          );
         }
+        // else if (
+        //     page.policyStartDate &&
+        //     page.policyEndDate &&
+        //     (
+        //         lossDate < new Date(page.policyStartDate) ||
+        //         lossDate > new Date(page.policyEndDate)
+        //     )
+        // ) {
+
+        //     setError(
+        //         "lossDate",
+        //         "Loss Date & Time must be within the policy period"
+        //     );
+
+        // }
       }
 
       /* ============================================================
@@ -1407,15 +1528,15 @@ export class claim_intakeComponent {
 
         console.log('bh.local.isValid:', bh.local.isValid);
       }
-      bh = this.sd_3e6c1de382874126(bh);
+      bh = this.sd_ExNjTCvyxA98uY2E(bh);
       //appendnew_next_validateFNOLSubmit
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_c41af14917bd472b');
+      return this.errorHandler(bh, e, 'sd_zYxbEDsu5bzTdOi1');
     }
   }
 
-  sd_3e6c1de382874126(bh) {
+  sd_ExNjTCvyxA98uY2E(bh) {
     try {
       if (
         this.sdService.operators['false'](
@@ -1425,7 +1546,7 @@ export class claim_intakeComponent {
           undefined
         )
       ) {
-        bh = this.sd_8dff369377c645bf(bh);
+        bh = this.sd_L3gEUuFl1ytbskLh(bh);
       } else if (
         this.sdService.operators['true'](
           this.page.submitSuccess,
@@ -1439,11 +1560,11 @@ export class claim_intakeComponent {
 
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_3e6c1de382874126');
+      return this.errorHandler(bh, e, 'sd_ExNjTCvyxA98uY2E');
     }
   }
 
-  sd_8dff369377c645bf(bh) {
+  sd_L3gEUuFl1ytbskLh(bh) {
     try {
       this.__page_injector__
         .get(MatSnackBar)
@@ -1453,10 +1574,10 @@ export class claim_intakeComponent {
           horizontalPosition: 'end',
           verticalPosition: 'top',
         });
-      //appendnew_next_sd_8dff369377c645bf
+      //appendnew_next_sd_L3gEUuFl1ytbskLh
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_8dff369377c645bf');
+      return this.errorHandler(bh, e, 'sd_L3gEUuFl1ytbskLh');
     }
   }
 
@@ -1489,6 +1610,10 @@ export class claim_intakeComponent {
 
         repairEstimateAvailable: page.repairEstimateAvailable === 'YES',
 
+        supportingEvidenceReference: (page.supportingEvidenceReference || '')
+          .toString()
+          .trim(),
+
         estimatedLossAmount: Number(page.estimatedAmount),
 
         currency: page.currency || 'INR',
@@ -1511,7 +1636,7 @@ export class claim_intakeComponent {
       //appendnew_next_prepareClaimRequest
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_f6dbcc990bee4fda');
+      return this.errorHandler(bh, e, 'sd_SuRbKOSAUuU72hm7');
     }
   }
 
@@ -1530,7 +1655,7 @@ export class claim_intakeComponent {
       //appendnew_next_postClaim
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_e6bfd4bce5424a57');
+      return this.errorHandler(bh, e, 'sd_YjArycL31ktiSSfE');
     }
   }
 
@@ -1611,7 +1736,7 @@ export class claim_intakeComponent {
       //appendnew_next_handleClaimResponse
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_086df7b2086e48b3');
+      return this.errorHandler(bh, e, 'sd_wdeNPAFo69XsCx1k');
     }
   }
 
@@ -1628,108 +1753,145 @@ export class claim_intakeComponent {
       //appendnew_next_successClaimMessage
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_b9jrxXo3v3p15rgI');
+      return this.errorHandler(bh, e, 'sd_XBn5GZOg2TL9SDMu');
     }
   }
 
-  clearFNOLForm(bh) {
+  validateTextFieldScript(bh) {
     try {
       const page = this.page;
-      const api = page.apiBaseUrl;
-      [
-        'policyNumber',
-        'claimantType',
-        'lossDate',
-        'lossLocation',
-        'lossType',
-        'lossDescription',
-        'driverName',
-        'licenceStatus',
-        'vehicleDrivable',
-        'thirdPartyFlag',
-        'injuryFlag',
-        'policeReportAvailable',
-        'policeReportReference',
-        'repairEstimateAvailable',
-        'evidenceReference',
-        'estimatedAmount',
-        'preferredContact',
-      ].forEach((k) => {
-        page[k] = '';
-        page[k + 'Error'] = '';
-      });
-      [
-        'policyStatus',
-        'policyStartDate',
-        'policyEndDate',
-        'insuredName',
-        'vehicleRegistration',
-        'vehicleMakeModel',
-        'coverageType',
-        'coverageLimit',
-        'sumInsured',
-        'excess',
-        'claimId',
-        'caseId',
-      ].forEach((k) => (page[k] = ''));
-      page.coveredPerils = [];
-      page.policyFetched = false;
-      page.policyLoading = false;
-      page.submitting = false;
-      page.submitSuccess = false;
-      page.submitError = '';
-      page.submitMessage = '';
-      page.validationErrors = {};
-      page.apiBaseUrl = api;
+      /* ============================================================
+       * GENERIC TEXT FIELD VALIDATION
+       * ============================================================ */
 
-      //appendnew_next_clearFNOLForm
-      return bh;
-    } catch (e) {
-      return this.errorHandler(bh, e, 'sd_22d752e29c2243e7');
-    }
-  }
+      console.log('====================================');
+      console.log('Text field validation started');
 
-  frontendCatchScript(bh) {
-    try {
-      const page = this.page;
-      page.submitting = false;
-      page.policyLoading = false;
-      const msg =
-        (bh.error && (bh.error.message || bh.error.error)) ||
-        'Unexpected technical error.';
-      if (page.submitted) page.submitError = msg;
-      else page.policyError = msg;
+      /* ============================================================
+       * GET FIELD NAME
+       * ============================================================ */
 
-      //appendnew_next_frontendCatchScript
-      return bh;
-    } catch (e) {
-      return this.errorHandler(bh, e, 'sd_22b10997ad734683');
-    }
-  }
+      const f = bh.input.fieldName;
 
-  searchTypeChangeScript(bh) {
-    try {
-      const page = this.page;
-      const type = page.searchType;
+      /* ============================================================
+       * GET FIELD VALUE
+       * ============================================================ */
 
-      if (type === 'POLICY_NUMBER') {
-        page.searchTypeLabel = 'Policy Number';
-        page.searchTypePlaceholder = 'Enter Policy Number';
-      } else if (type === 'REGISTRATION_NUMBER') {
-        page.searchTypeLabel = 'Registration Number';
-        page.searchTypePlaceholder = 'Enter Registration Number';
-      } else if (type === 'CUSTOMER_ID') {
-        page.searchTypeLabel = 'Customer ID';
-        page.searchTypePlaceholder = 'Enter Customer ID';
+      const v = page[f];
+
+      const s = v === null || v === undefined ? '' : v.toString().trim();
+
+      /* ============================================================
+       * ERROR
+       * ============================================================ */
+
+      let e = '';
+
+      /* ============================================================
+       * FIELD LABELS
+       * ============================================================ */
+
+      const fieldLabels = {
+        policyStatus: 'Policy Status',
+
+        policyStartDate: 'Policy Start Date',
+
+        policyEndDate: 'Policy End Date',
+
+        insuredName: 'Insured',
+
+        vehicleRegistration: 'Vehicle Registration',
+
+        vehicleMakeModel: 'Vehicle',
+
+        coverageType: 'Coverage Type',
+
+        coverageLimit: 'Coverage Limit',
+
+        sumInsured: 'Sum Insured',
+
+        excess: 'Excess / Deductible',
+      };
+
+      /* ============================================================
+       * GET DISPLAY LABEL
+       * ============================================================ */
+
+      const fieldLabel = fieldLabels[f] || f;
+
+      /* ============================================================
+       * REQUIRED VALIDATION
+       * ============================================================ */
+
+      if (!s) {
+        e = fieldLabel + ' is required';
       }
 
-      page.searchValue = '';
-      page.searchError = '';
-      page.policyFetched = false;
-      //appendnew_next_searchTypeChangeScript
+      /* ============================================================
+       * UPDATE FIELD ERROR
+       * ============================================================ */
+
+      page[f + 'Error'] = e;
+
+      /* ============================================================
+       * ENSURE VALIDATION ERROR OBJECT
+       * ============================================================ */
+
+      if (!page.validationErrors) {
+        page.validationErrors = {};
+      }
+
+      /* ============================================================
+       * UPDATE VALIDATION ERRORS
+       * ============================================================ */
+
+      if (e) {
+        page.validationErrors[f] = e;
+      } else {
+        page.validationErrors[f] = '';
+
+        delete page.validationErrors[f];
+      }
+
+      /* ============================================================
+       * RECALCULATE FORM VALIDITY
+       * ============================================================ */
+
+      let hasErrors = false;
+
+      Object.keys(page.validationErrors || {}).forEach(function (key) {
+        const error = page.validationErrors[key];
+
+        if (error && error.toString().trim() !== '') {
+          hasErrors = true;
+        }
+      });
+
+      bh.local.isValid = !hasErrors;
+
+      /* ============================================================
+       * DEBUG
+       * ============================================================ */
+
+      console.log('Field:', f);
+
+      console.log('Value:', s);
+
+      console.log('Field Label:', fieldLabel);
+
+      console.log('Field Error:', e);
+
+      console.log('Validation Errors:', page.validationErrors);
+
+      console.log('Form Valid:', bh.local.isValid);
+
+      console.log('====================================');
+
+      return bh;
+      //appendnew_next_validateTextFieldScript
       return bh;
     } catch (e) {
-      return this.errorHandler(bh, e, 'sd_K5bhn8ynIefZ3pNB');
+      return this.errorHandler(bh, e, 'sd_phIRDBbiyMtk6xyV');
     }
   }
 
