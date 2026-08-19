@@ -718,7 +718,7 @@
                             },
                             {
                                 "_key": "html",
-                                "_value": "<h2>Policy Search &amp; Policy Context</h2>",
+                                "_value": "Policy Search &amp; Policy Context",
                                 "_type": "a",
                                 "_attrDef": "p"
                             }
@@ -5404,8 +5404,8 @@
                                 "_attrDef": "p"
                             }
                         ],
-                        "4df8caee-71ee-4819-8787-0740e13fe048": {
-                            "paletteKey": "NG-Input",
+                        "e7a90ba6-24f2-5721-a51b-053c05817428": {
+                            "paletteKey": "NG-Select",
                             "parentEditorKey": "1ab34421-1926-483a-80ea-254d130517d0",
                             "isAdvancedComponent": true,
                             "commentid": null,
@@ -5423,27 +5423,78 @@
                                     "_attrDef": "p"
                                 },
                                 {
+                                    "_key": "innerMatSelectStyle",
+                                    "_value": "",
+                                    "_type": "kv",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "innerMatSelectClass",
+                                    "_value": "",
+                                    "_type": "dav",
+                                    "_attrDef": "p"
+                                },
+                                {
                                     "_key": "placeholder",
-                                    "_value": "Enter Loss Location",
+                                    "_value": "Select Loss Location",
                                     "_type": "kv",
                                     "_attrDef": "p",
                                     "_useAsLabel": true
                                 },
                                 {
-                                    "_key": "value",
-                                    "_value": "",
-                                    "_type": "kv",
-                                    "_attrDef": "p"
-                                },
-                                {
-                                    "_key": "[appearance]",
-                                    "_value": "",
+                                    "_key": "Label",
+                                    "_value": "Loss Location",
                                     "_type": "a",
                                     "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "[required]",
-                                    "_value": "true",
+                                    "_key": "datasource",
+                                    "_value": "page.lossLocations",
+                                    "_type": "a",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "[groupOptions]",
+                                    "_value": "noGroup",
+                                    "_type": "dav",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "[groupLabels]",
+                                    "_value": "",
+                                    "_type": "kv",
+                                    "_attrDef": "p",
+                                    "_visibility": false
+                                },
+                                {
+                                    "_key": "[disableGroup]",
+                                    "_value": "",
+                                    "_type": "kv",
+                                    "_attrDef": "p",
+                                    "_visibility": false
+                                },
+                                {
+                                    "_key": "[optionDatasource]",
+                                    "_value": "",
+                                    "_type": "a",
+                                    "_attrDef": "p",
+                                    "_visibility": false
+                                },
+                                {
+                                    "_key": "optionValue",
+                                    "_value": "option.value",
+                                    "_type": "a",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "optionView",
+                                    "_value": "{{option.label}}",
+                                    "_type": "a",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "formControlName",
+                                    "_value": "",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
@@ -5454,45 +5505,21 @@
                                     "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "color",
+                                    "_key": "[(value)]",
                                     "_value": "",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "name",
-                                    "_value": "lossLocation",
+                                    "_key": "[required]",
+                                    "_value": "false",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "type",
-                                    "_value": "text",
-                                    "_type": "kv",
-                                    "_attrDef": "p"
-                                },
-                                {
-                                    "_key": "[formControl]",
-                                    "_value": "",
-                                    "_type": "kv",
-                                    "_attrDef": "p"
-                                },
-                                {
-                                    "_key": "readonly",
-                                    "_value": "",
-                                    "_type": "kv",
-                                    "_attrDef": "p"
-                                },
-                                {
-                                    "_key": "[disabled]",
-                                    "_value": "",
-                                    "_type": "kv",
-                                    "_attrDef": "p"
-                                },
-                                {
-                                    "_key": "id",
-                                    "_value": "lossLocation",
-                                    "_type": "kv",
+                                    "_key": "[appearance]",
+                                    "_value": "'legacy'",
+                                    "_type": "a",
                                     "_attrDef": "p"
                                 },
                                 {
@@ -5502,80 +5529,35 @@
                                     "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "[hideRequiredMarker]",
-                                    "_value": "false",
+                                    "_key": "[disableRipple]",
+                                    "_value": "",
                                     "_type": "kv",
-                                    "_attrDef": "p",
-                                    "_complexity": "advanced"
+                                    "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "matError",
-                                    "_value": [],
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
+                                    "_key": "multiple",
+                                    "_value": "",
+                                    "_type": "dav",
+                                    "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "inputHint",
-                                    "_value": [],
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "Label",
-                                    "_value": "Loss Location",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "Suffix Icon",
+                                    "_key": "CustomTriggerValue",
                                     "_value": "",
                                     "_type": "a",
                                     "_attrDef": "p",
-                                    "_visibility": true
+                                    "_visibility": false
                                 },
                                 {
-                                    "_key": "(suffixIconClick)",
+                                    "_key": "(openedChange)",
                                     "_value": "",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
+                                    "_type": "kv",
+                                    "_attrDef": "p"
                                 },
                                 {
-                                    "_key": "Prefix Icon",
-                                    "_value": "",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "(prefixIconClick)",
-                                    "_value": "",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "Prefix",
-                                    "_value": "",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "Suffix",
-                                    "_value": "",
-                                    "_type": "a",
-                                    "_attrDef": "p",
-                                    "_visibility": true
-                                },
-                                {
-                                    "_key": "(blur)",
+                                    "_key": "(selectionChange)",
                                     "_value": "validateField('lossLocation')",
                                     "_type": "kv",
-                                    "_attrDef": "c",
+                                    "_attrDef": "p",
                                     "_customAttributeFlag": "flowpicker",
                                     "objValue": {
                                         "nodeID": "sd_e571d2e684304195",
@@ -5586,6 +5568,50 @@
                                             "lossLocation"
                                         ]
                                     }
+                                },
+                                {
+                                    "_key": "selectCustomOption",
+                                    "_value": [],
+                                    "_type": "a",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "selectStyle",
+                                    "_value": "Basic",
+                                    "_type": "a",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "panelClass",
+                                    "_value": "",
+                                    "_type": "dav",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "[disabled]",
+                                    "_value": "",
+                                    "_type": "kv",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "[errorStateMatcher]",
+                                    "_value": "",
+                                    "_type": "kv",
+                                    "_attrDef": "p"
+                                },
+                                {
+                                    "_key": "option",
+                                    "_value": "option",
+                                    "_type": "a",
+                                    "_attrDef": "p",
+                                    "_visibility": false
+                                },
+                                {
+                                    "_key": "matError",
+                                    "_value": [],
+                                    "_type": "a",
+                                    "_attrDef": "p",
+                                    "_visibility": true
                                 }
                             ]
                         },
@@ -10633,7 +10659,7 @@
                         "designerReference": [
                             {
                                 "_key": "componentLabel",
-                                "_value": "Column",
+                                "_value": "preferred Contact value field",
                                 "_type": "kv",
                                 "_attrDef": "p",
                                 "_useAsLabel": true
@@ -10690,7 +10716,7 @@
                                 "_attrDef": "p"
                             }
                         ],
-                        "f6da45f0-fce9-2f2e-1acb-f29776f127f5": {
+                        "3f20e232-16c9-ba81-a172-ced1c8240813": {
                             "paletteKey": "NG-Input",
                             "parentEditorKey": "ced0281b-2fbe-b03d-5083-03ec13e9a997",
                             "isAdvancedComponent": true,
@@ -10698,7 +10724,7 @@
                             "designerReference": [
                                 {
                                     "_key": "style",
-                                    "_value": "",
+                                    "_value": "box-sizing:border-box;padding:8px;",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
@@ -10710,7 +10736,7 @@
                                 },
                                 {
                                     "_key": "placeholder",
-                                    "_value": "Preferred Contact Value",
+                                    "_value": "Enter Preferred Contact Value",
                                     "_type": "kv",
                                     "_attrDef": "p",
                                     "_useAsLabel": true
@@ -10777,7 +10803,7 @@
                                 },
                                 {
                                     "_key": "id",
-                                    "_value": " preferredContactValue",
+                                    "_value": "preferredContactValue",
                                     "_type": "kv",
                                     "_attrDef": "p"
                                 },
@@ -10810,7 +10836,7 @@
                                 },
                                 {
                                     "_key": "Label",
-                                    "_value": "",
+                                    "_value": "Preferred Contact Value",
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
@@ -10856,10 +10882,26 @@
                                     "_type": "a",
                                     "_attrDef": "p",
                                     "_visibility": true
+                                },
+                                {
+                                    "_key": "(blur)",
+                                    "_value": "validateField('preferredContactValue')",
+                                    "_type": "kv",
+                                    "_attrDef": "c",
+                                    "_customAttributeFlag": "flowpicker",
+                                    "objValue": {
+                                        "nodeID": "sd_e571d2e684304195",
+                                        "functionName": "validateField",
+                                        "activeTree": "pages",
+                                        "z": "sd_claimFnol_20260814",
+                                        "input": [
+                                            "preferredContactValue"
+                                        ]
+                                    }
                                 }
                             ]
                         },
-                        "9d4c6ed6-dd2a-0d82-5fa9-1b0ccb816f38": {
+                        "bdbf8653-b4f6-7b90-40a9-003450b0e176": {
                             "paletteKey": "ng-mat-error",
                             "parentEditorKey": "ced0281b-2fbe-b03d-5083-03ec13e9a997",
                             "isAdvancedComponent": true,
@@ -10867,7 +10909,7 @@
                             "designerReference": [
                                 {
                                     "_key": "componentLabel",
-                                    "_value": "Error",
+                                    "_value": "Preferred Contact Value Error",
                                     "_type": "kv",
                                     "_attrDef": "p",
                                     "_useAsLabel": true

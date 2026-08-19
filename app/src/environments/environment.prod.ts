@@ -2,7 +2,7 @@ export const environment = {
     "name": "prod",
     "properties": {
         "production": true,
-        "ssdURL": "http://localhost:8081/api/",
+        "ssdURL": "http://localhost:8081/api",
         "tenantName": "neutrinos-training",
         "appName": "fnol-ui",
         "namespace": "com.neutrinos-training.fnol-ui",

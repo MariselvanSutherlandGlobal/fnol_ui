@@ -169,7 +169,7 @@ export class claim_intakeComponent {
       this.page.submitMessage = undefined;
       this.page.claimId = undefined;
       this.page.caseId = undefined;
-      bh = this.initialiseFnol(bh);
+      bh = this.prepareMasterdataUrl(bh);
       //appendnew_next_sd_2e3ea1f9ab934935
       return bh;
     } catch (e) {
@@ -177,13 +177,55 @@ export class claim_intakeComponent {
     }
   }
 
+  prepareMasterdataUrl(bh) {
+    try {
+      const page = this.page;
+      bh.local.reelsMasterUrl =
+        bh.system.environment.properties.ssdURL + '/master-data';
+      console.log('reelsMasterUrl', bh.local.reelsMasterUrl);
+      bh = this.sd_PhHEfSQ8OlZDtpng(bh);
+      //appendnew_next_prepareMasterdataUrl
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_SnEHKiQuRCu1KsdO');
+    }
+  }
+
+  async sd_PhHEfSQ8OlZDtpng(bh) {
+    try {
+      let requestOptions = {
+        url: bh.local.reelsMasterUrl,
+        method: 'get',
+        responseType: 'json',
+        headers: {},
+        params: {},
+        body: undefined,
+      };
+      bh.local.records = await this.sdService.nHttpRequest(requestOptions);
+      bh = this.initialiseFnol(bh);
+      //appendnew_next_sd_PhHEfSQ8OlZDtpng
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_PhHEfSQ8OlZDtpng');
+    }
+  }
+
   initialiseFnol(bh) {
     try {
       const page = this.page;
+      console.log('records masterdata', bh.local.records);
+
+      console.log('proposalResponse on Init', bh.local.proposalResponse);
+
       page.today = new Date();
-      page.policyApiUrl = page.apiBaseUrl + '/policies';
-      page.claimApiUrl = page.apiBaseUrl + '/claims';
-      page.caseServiceUrl = page.apiBaseUrl + '/case-service/cases';
+
+      page.policyApiUrl = bh.system.environment.properties.ssdURL + '/policies';
+
+      page.claimApiUrl = bh.system.environment.properties.ssdURL + '/claims';
+
+      page.caseServiceUrl =
+        bh.system.environment.properties.ssdURL + '/case-service/cases';
+
       page.policyFetched = false;
       page.policyLoading = false;
       page.submitting = false;
@@ -192,52 +234,232 @@ export class claim_intakeComponent {
       page.submitError = '';
       page.submitMessage = '';
       page.validationErrors = {};
-      page.claimantTypes = [
-        { label: 'Policyholder', value: 'POLICYHOLDER' },
-        { label: 'Driver', value: 'DRIVER' },
-        { label: 'Third Party', value: 'THIRD_PARTY' },
-        { label: 'Representative', value: 'REPRESENTATIVE' },
-      ];
 
-      page.lossTypes = [
-        { label: 'Collision', value: 'COLLISION' },
-        { label: 'Theft', value: 'THEFT' },
-        { label: 'Fire', value: 'FIRE' },
-        { label: 'Flood', value: 'FLOOD' },
-        { label: 'Glass', value: 'GLASS' },
-        { label: 'Other', value: 'OTHER' },
-      ];
+      /*
+       * ============================================================
+       * FNOL MASTER DATA
+       * ============================================================
+       *
+       * Convert API master-data response into the format:
+       *
+       * [
+       *   {
+       *     label: "Display Name",
+       *     value: "CODE"
+       *   }
+       * ]
+       *
+       * Only Active = "Y" records are included.
+       */
 
-      page.licenceStatuses = [
-        { label: 'Valid', value: 'VALID' },
-        { label: 'Expired', value: 'EXPIRED' },
-        { label: 'Suspended', value: 'SUSPENDED' },
-        { label: 'Unknown', value: 'UNKNOWN' },
-      ];
+      // Default empty arrays
+      page.claimantTypes = [];
+      page.lossTypes = [];
+      page.lossLocations = [];
+      page.licenceStatuses = [];
+
+      /*
+       * Get master-data response
+       *
+       * Expected structure:
+       *
+       * bh.local.records.data.claimantTypes
+       * bh.local.records.data.lossTypes
+       * bh.local.records.data.lossLocations
+       * bh.local.records.data.driverLicenceStatuses
+       */
+
+      if (
+        bh.local.records &&
+        bh.local.records.success === true &&
+        bh.local.records.data
+      ) {
+        var masterData = bh.local.records.data;
+
+        /*
+         * ------------------------------------------------------------
+         * Claimant Types
+         * ------------------------------------------------------------
+         *
+         * API:
+         * Display Name     -> label
+         * Claimant Type    -> value
+         */
+
+        if (Array.isArray(masterData.claimantTypes)) {
+          page.claimantTypes = masterData.claimantTypes
+            .filter(function (item) {
+              return item['Active'] === 'Y';
+            })
+            .map(function (item) {
+              return {
+                label: item['Display Name'],
+                value: item['Claimant Type'],
+              };
+            });
+        }
+
+        /*
+         * ------------------------------------------------------------
+         * Loss Types
+         * ------------------------------------------------------------
+         *
+         * API:
+         * Display Name     -> label
+         * Loss Type Code   -> value
+         */
+
+        if (Array.isArray(masterData.lossTypes)) {
+          page.lossTypes = masterData.lossTypes
+            .filter(function (item) {
+              return item['Active'] === 'Y';
+            })
+            .map(function (item) {
+              return {
+                label: item['Display Name'],
+                value: item['Loss Type Code'],
+              };
+            });
+        }
+
+        /*
+         * ------------------------------------------------------------
+         * Loss Locations
+         * ------------------------------------------------------------
+         *
+         * API:
+         * Display Name     -> label
+         * Location Code    -> value
+         */
+
+        if (Array.isArray(masterData.lossLocations)) {
+          page.lossLocations = masterData.lossLocations
+            .filter(function (item) {
+              return item['Active'] === 'Y';
+            })
+            .map(function (item) {
+              return {
+                label: item['Display Name'],
+                value: item['Location Code'],
+              };
+            });
+        }
+
+        /*
+         * ------------------------------------------------------------
+         * Driver Licence Statuses
+         * ------------------------------------------------------------
+         *
+         * API:
+         * Display Name      -> label
+         * Licence Status    -> value
+         */
+
+        if (Array.isArray(masterData.driverLicenceStatuses)) {
+          page.licenceStatuses = masterData.driverLicenceStatuses
+            .filter(function (item) {
+              return item['Active'] === 'Y';
+            })
+            .map(function (item) {
+              return {
+                label: item['Display Name'],
+                value: item['Licence Status'],
+              };
+            });
+        }
+      } else {
+        console.log(
+          'FNOL master data is not available or API response is unsuccessful'
+        );
+      }
+
+      /*
+       * ============================================================
+       * LOG FINAL DROPDOWN DATA
+       * ============================================================
+       */
+
+      console.log('claimantTypes dropdown', page.claimantTypes);
+
+      console.log('lossTypes dropdown', page.lossTypes);
+
+      console.log('lossLocations dropdown', page.lossLocations);
+
+      console.log('licenceStatuses dropdown', page.licenceStatuses);
+
+      /*
+       * ============================================================
+       * YES / NO OPTIONS
+       * ============================================================
+       */
 
       page.yesNoOptions = [
-        { label: 'Yes', value: 'YES' },
-        { label: 'No', value: 'NO' },
+        {
+          label: 'Yes',
+          value: 'YES',
+        },
+        {
+          label: 'No',
+          value: 'NO',
+        },
       ];
+
+      /*
+       * ============================================================
+       * PREFERRED CONTACT OPTIONS
+       * ============================================================
+       */
 
       page.preferredContacts = [
-        { label: 'Email', value: 'EMAIL' },
-        { label: 'SMS', value: 'SMS' },
-        { label: 'Phone', value: 'PHONE' },
+        {
+          label: 'Email',
+          value: 'EMAIL',
+        },
+        {
+          label: 'SMS',
+          value: 'SMS',
+        },
+        {
+          label: 'Phone',
+          value: 'PHONE',
+        },
       ];
 
+      /*
+       * ============================================================
+       * POLICY SEARCH TYPES
+       * ============================================================
+       */
+
       page.policySearchTypes = [
-        { label: 'Policy Number', value: 'POLICY_NUMBER' },
-        { label: 'Registration Number', value: 'REGISTRATION_NUMBER' },
-        { label: 'Customer ID', value: 'CUSTOMER_ID' },
+        {
+          label: 'Policy Number',
+          value: 'POLICY_NUMBER',
+        },
+        {
+          label: 'Registration Number',
+          value: 'REGISTRATION_NUMBER',
+        },
+        {
+          label: 'Customer ID',
+          value: 'CUSTOMER_ID',
+        },
       ];
+
       page.searchType = 'POLICY_NUMBER';
+
       page.searchTypeLabel = 'Policy Number';
+
       page.searchTypePlaceholder = 'Enter Policy Number';
+
       page.searchValue = '';
+
       page.searchTypeError = '';
+
       page.searchValueError = '';
+
       page.preferredContactValue = '';
+
       page.preferredContactValueError = '';
       //appendnew_next_initialiseFnol
       return bh;
@@ -283,7 +505,6 @@ export class claim_intakeComponent {
       if (validSearchTypes.indexOf(searchType) === -1) {
         page.searchTypeError = 'Invalid Search Type';
       }
-
       /* -----------------------------------------
    Validate Search Value
 ----------------------------------------- */
@@ -318,6 +539,10 @@ export class claim_intakeComponent {
         }
       }
 
+      if (!searchValue || !searchType) {
+        return;
+      }
+
       /* -----------------------------------------
    Prepare HTTP URL
 ----------------------------------------- */
@@ -325,7 +550,7 @@ export class claim_intakeComponent {
       page.policyLoading = true;
 
       bh.local.policyApiUrl =
-        page.apiBaseUrl +
+        bh.system.environment.properties.ssdURL +
         '/policies/search' +
         '?searchType=' +
         encodeURIComponent(searchType) +
@@ -333,6 +558,7 @@ export class claim_intakeComponent {
         encodeURIComponent(searchValue);
 
       console.log('Policy Search URL:', bh.local.policyApiUrl);
+
       bh = this.getPolicy(bh);
       //appendnew_next_preparePolicyFetch
       return bh;
@@ -363,57 +589,130 @@ export class claim_intakeComponent {
   mapPolicyResponse(bh) {
     try {
       const page = this.page;
+      /* ============================================================
+       * POLICY RESPONSE HANDLING
+       * ============================================================ */
+
       page.policyLoading = false;
 
       const r = bh.local.response || {};
 
       const policies = Array.isArray(r.policies) ? r.policies : [];
 
-      if (!r.success || policies.length === 0) {
+      /* ============================================================
+       * CLEAR PREVIOUS POLICY ERROR
+       * ============================================================ */
+
+      page.policyMessage = '';
+
+      /* ============================================================
+       * NO POLICY FOUND / API FAILURE
+       * ============================================================ */
+
+      if (!r.success || !Array.isArray(r.policies) || policies.length === 0) {
         page.policyFetched = false;
-        page.policyError = 'Policy not found.';
-        return;
+
+        page.policyId = '';
+
+        page.policyMessage = 'Policy not found.';
+
+        console.log('Policy search result: No policy found');
+
+        console.log('Policy API response:', r);
+
+        console.log('Policy Message:', page.policyMessage);
+      } else {
+        /* ============================================================
+         * FIRST POLICY
+         * ============================================================ */
+
+        const p = policies[0];
+
+        /* ============================================================
+         * POLICY IDENTITY
+         * ============================================================ */
+
+        page.policyId = p.id || '';
+
+        page.policyNumber = p.policyNumber || '';
+
+        page.customerId = p.customerId || '';
+
+        /* ============================================================
+         * POLICY DETAILS
+         * ============================================================ */
+
+        page.policyStatus = p.policyStatus || '';
+
+        page.policyStartDate = p.policyStartDate || '';
+
+        page.policyEndDate = p.policyEndDate || '';
+
+        page.insuredName = p.insuredName || '';
+
+        /* ============================================================
+         * VEHICLE
+         * ============================================================ */
+
+        page.vehicleRegistration = p.vehicleRegistration || '';
+
+        page.vehicleMake = p.vehicleMake || '';
+
+        page.vehicleModel = p.vehicleModel || '';
+
+        page.vehicleYear = p.vehicleYear || '';
+
+        /* ============================================================
+         * VEHICLE MAKE + MODEL
+         * ============================================================ */
+
+        page.vehicleMakeModel = [page.vehicleMake, page.vehicleModel]
+          .filter(function (v) {
+            return v !== null && v !== undefined && v !== '';
+          })
+          .join(' ');
+
+        /* ============================================================
+         * COVERAGE
+         * ============================================================ */
+
+        page.coverageType = p.coverageType || '';
+
+        page.coveredPerils = Array.isArray(p.coveredPerils)
+          ? p.coveredPerils
+          : [];
+
+        page.excess = p.excessAmount ?? '';
+
+        page.sumInsured = p.sumInsured ?? '';
+
+        page.currency = p.currency || 'INR';
+
+        /* ============================================================
+         * SUCCESS
+         * ============================================================ */
+
+        page.policyFetched = true;
+
+        page.policyMessage = 'Policy fetched successfully';
+
+        /* ============================================================
+         * DEBUG
+         * ============================================================ */
+
+        console.log('Policy fetched successfully');
+
+        console.log('Policy:', p);
+
+        console.log('Policy ID:', page.policyId);
+
+        console.log('Policy Number:', page.policyNumber);
+
+        console.log('Policy Message:', page.policyMessage);
+
+        console.log('Policy Fetched:', page.policyFetched);
       }
-
-      const p = policies[0];
-
-      /* Policy identity */
-      page.policyId = p.id || '';
-      page.policyNumber = p.policyNumber || '';
-      page.customerId = p.customerId || '';
-
-      /* Policy details */
-      page.policyStatus = p.policyStatus || '';
-      page.policyStartDate = p.policyStartDate || '';
-      page.policyEndDate = p.policyEndDate || '';
-      page.insuredName = p.insuredName || '';
-
-      /* Vehicle */
-      page.vehicleRegistration = p.vehicleRegistration || '';
-      page.vehicleMake = p.vehicleMake || '';
-      page.vehicleModel = p.vehicleModel || '';
-      page.vehicleYear = p.vehicleYear || '';
-
-      page.vehicleMakeModel = [page.vehicleMake, page.vehicleModel]
-        .filter(function (v) {
-          return v !== null && v !== undefined && v !== '';
-        })
-        .join(' ');
-
-      /* Coverage */
-      page.coverageType = p.coverageType || '';
-
-      page.coveredPerils = Array.isArray(p.coveredPerils)
-        ? p.coveredPerils
-        : [];
-
-      page.excess = p.excessAmount ?? '';
-      page.sumInsured = p.sumInsured ?? '';
-      page.currency = p.currency || 'INR';
-
-      /* Success */
-      page.policyFetched = true;
-      page.policyError = '';
+      bh = this.sd_stThBzJxwLbbzVPX(bh);
       //appendnew_next_mapPolicyResponse
       return bh;
     } catch (e) {
@@ -421,56 +720,301 @@ export class claim_intakeComponent {
     }
   }
 
+  sd_stThBzJxwLbbzVPX(bh) {
+    try {
+      this.__page_injector__
+        .get(MatSnackBar)
+        .open(this.page.policyMessage, 'ok', {
+          duration: 3000,
+          direction: 'ltr',
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+      //appendnew_next_sd_stThBzJxwLbbzVPX
+      return bh;
+    } catch (e) {
+      return this.errorHandler(bh, e, 'sd_stThBzJxwLbbzVPX');
+    }
+  }
+
   validateFieldScript(bh) {
     try {
       const page = this.page;
-      const f = bh.input.fieldName,
-        v = page[f],
-        s = v == null ? '' : v.toString().trim();
-      let e = '';
-      if (f === 'policyNumber' && !s) e = 'Policy Number is required';
-      else if (f === 'claimantType' && !s) e = 'Claimant Type is required';
-      else if (f === 'lossDate') {
-        if (!s) e = 'Loss Date & Time is required';
-        else if (new Date(s) > new Date())
-          e = 'Loss Date & Time cannot be in the future';
-        else if (
-          page.policyFetched &&
-          page.policyStartDate &&
-          page.policyEndDate &&
-          (new Date(s) < new Date(page.policyStartDate) ||
-            new Date(s) > new Date(page.policyEndDate))
-        )
-          e = 'Loss Date & Time must be within the policy period';
-      } else if (f === 'lossLocation' && !s) e = 'Loss Location is required';
-      else if (f === 'lossType' && !s) e = 'Loss Type is required';
-      else if (f === 'lossDescription' && (!s || s.length < 20))
-        e = 'Loss Description must contain at least 20 characters';
-      else if (f === 'driverName' && !s) e = 'Driver Name is required';
-      else if (
-        [
-          'licenceStatus',
-          'vehicleDrivable',
-          'thirdPartyFlag',
-          'injuryFlag',
-          'policeReportAvailable',
-          'repairEstimateAvailable',
-          'preferredContact',
-        ].includes(f) &&
-        !s
-      )
-        e = 'This field is required';
-      else if (
-        f === 'policeReportReference' &&
-        page.policeReportAvailable === 'YES' &&
-        !s
-      )
-        e = 'Police / FIR reference is required';
-      else if (f === 'estimatedAmount' && !(Number(v) > 0))
-        e = 'Estimated Repair / Loss Amount must be greater than 0';
-      page[f + 'Error'] = e;
-      page.validationErrors[f] = e;
+      /* ============================================================
+       * FIELD VALIDATION - ON BLUR / CHANGE
+       * ============================================================ */
 
+      console.log('Field validation started');
+
+      /* ============================================================
+       * GET FIELD
+       * ============================================================ */
+
+      const f = bh.input.fieldName;
+
+      const v = page[f];
+
+      const s = v == null ? '' : v.toString().trim();
+
+      let e = '';
+
+      /* ============================================================
+       * POLICY NUMBER
+       * ============================================================ */
+
+      if (f === 'policyNumber') {
+        if (!s) {
+          e = 'Policy Number is required';
+        } else if (!page.policyFetched || !page.policyId) {
+          e = 'Fetch a valid policy before submitting';
+        }
+      } else if (f === 'claimantType') {
+
+      /* ============================================================
+       * CLAIMANT TYPE
+       * ============================================================ */
+        if (!s) {
+          e = 'Claimant Type is required';
+        }
+      } else if (f === 'lossDate') {
+
+      /* ============================================================
+       * LOSS DATE
+       * ============================================================ */
+        if (!s) {
+          e = 'Loss Date & Time is required';
+        } else {
+          const lossDate = new Date(s);
+
+          if (isNaN(lossDate.getTime())) {
+            e = 'Enter a valid Loss Date & Time';
+          } else if (lossDate > new Date()) {
+            e = 'Loss Date & Time cannot be in the future';
+          } else if (
+            page.policyFetched &&
+            page.policyStartDate &&
+            page.policyEndDate &&
+            (lossDate < new Date(page.policyStartDate) ||
+              lossDate > new Date(page.policyEndDate))
+          ) {
+            e = 'Loss Date & Time must be within the policy period';
+          }
+        }
+      } else if (f === 'lossLocation') {
+
+      /* ============================================================
+       * LOSS LOCATION
+       * ============================================================ */
+        if (!s) {
+          e = 'Loss Location is required';
+        }
+      } else if (f === 'lossType') {
+
+      /* ============================================================
+       * LOSS TYPE
+       * ============================================================ */
+        if (!s) {
+          e = 'Loss Type is required';
+        }
+      } else if (f === 'lossDescription') {
+
+      /* ============================================================
+       * LOSS DESCRIPTION
+       * ============================================================ */
+        if (!s) {
+          e = 'Loss Description is required';
+        } else if (s.length < 20) {
+          e = 'Loss Description must contain at least 20 characters';
+        }
+      } else if (f === 'driverName') {
+
+      /* ============================================================
+       * DRIVER NAME
+       * ============================================================ */
+        if (!s) {
+          e = 'Driver Name is required';
+        }
+      } else if (f === 'licenceStatus') {
+
+      /* ============================================================
+       * LICENCE STATUS
+       * ============================================================ */
+        if (!s) {
+          e = 'Licence Status is required';
+        }
+      } else if (
+
+      /* ============================================================
+       * YES / NO FIELDS
+       * ============================================================ */
+        f === 'vehicleDrivable' ||
+        f === 'thirdPartyFlag' ||
+        f === 'injuryFlag' ||
+        f === 'policeReportAvailable' ||
+        f === 'repairEstimateAvailable'
+      ) {
+        if (s !== 'YES' && s !== 'NO') {
+          e = 'Select Yes or No';
+        }
+      } else if (f === 'policeReportReference') {
+
+      /* ============================================================
+       * POLICE REPORT REFERENCE
+       * ============================================================ */
+        if (page.policeReportAvailable === 'YES' && !s) {
+          e = 'Police / FIR reference is required';
+        }
+      } else if (f === 'estimatedAmount') {
+
+      /* ============================================================
+       * ESTIMATED AMOUNT
+       * ============================================================ */
+        if (!s) {
+          e = 'Estimated Repair / Loss Amount is required';
+        } else if (!isFinite(Number(v)) || Number(v) <= 0) {
+          e = 'Estimated Repair / Loss Amount must be greater than 0';
+        }
+      } else if (f === 'preferredContact') {
+
+      /* ============================================================
+       * PREFERRED CONTACT
+       * ============================================================ */
+        if (!s) {
+          e = 'Preferred Contact is required';
+        } else {
+          const validContacts = ['EMAIL', 'SMS', 'PHONE'];
+
+          if (validContacts.indexOf(s) === -1) {
+            e = 'Select a valid Preferred Contact';
+          }
+        }
+      } else if (f === 'preferredContactValue') {
+
+      /* ============================================================
+       * PREFERRED CONTACT VALUE
+       *
+       * EMAIL -> test@adasa.com
+       * PHONE -> 9837373638
+       * SMS   -> 9898282822
+       * ============================================================ */
+        console.log('====================================');
+
+        console.log('Validating Preferred Contact Value');
+
+        console.log('Preferred Contact:', page.preferredContact);
+
+        console.log('Preferred Contact Value:', s);
+
+        /* --------------------------------------------------------
+         * REQUIRED
+         * -------------------------------------------------------- */
+
+        if (!s) {
+          e = 'Preferred Contact Value is required';
+        } else if (page.preferredContact === 'EMAIL') {
+
+        /* --------------------------------------------------------
+         * EMAIL
+         * -------------------------------------------------------- */
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          if (!emailPattern.test(s)) {
+            e = 'Enter a valid email address';
+          }
+        } else if (page.preferredContact === 'PHONE') {
+
+        /* --------------------------------------------------------
+         * PHONE
+         * -------------------------------------------------------- */
+          const phonePattern = /^[0-9]{10}$/;
+
+          if (!phonePattern.test(s)) {
+            e = 'Enter a valid 10-digit mobile number';
+          }
+        } else if (page.preferredContact === 'SMS') {
+
+        /* --------------------------------------------------------
+         * SMS
+         * -------------------------------------------------------- */
+          const smsPattern = /^[0-9]{10}$/;
+
+          if (!smsPattern.test(s)) {
+            e = 'Enter a valid 10-digit mobile number';
+          }
+        } else {
+
+        /* --------------------------------------------------------
+         * CONTACT TYPE NOT SELECTED
+         * -------------------------------------------------------- */
+          e = 'Select Preferred Contact first';
+        }
+
+        console.log('Preferred Contact Value Error:', e);
+      }
+
+      /* ============================================================
+       * UPDATE FIELD ERROR
+       * ============================================================ */
+
+      page[f + 'Error'] = e;
+
+      /* ============================================================
+       * ENSURE VALIDATION ERROR OBJECT
+       * ============================================================ */
+
+      if (!page.validationErrors) {
+        page.validationErrors = {};
+      }
+
+      /* ============================================================
+       * UPDATE VALIDATION ERRORS
+       * ============================================================ */
+
+      if (e) {
+        page.validationErrors[f] = e;
+      } else {
+        /*
+         * Clear the old error completely.
+         */
+
+        page.validationErrors[f] = '';
+
+        delete page.validationErrors[f];
+      }
+
+      /* ============================================================
+       * RECALCULATE FORM VALIDITY
+       * ============================================================ */
+
+      let hasErrors = false;
+
+      Object.keys(page.validationErrors || {}).forEach(function (key) {
+        const error = page.validationErrors[key];
+
+        if (error && error.toString().trim() !== '') {
+          hasErrors = true;
+        }
+      });
+
+      bh.local.isValid = !hasErrors;
+
+      /* ============================================================
+       * DEBUG
+       * ============================================================ */
+
+      console.log('Field:', f);
+
+      console.log('Value:', s);
+
+      console.log('Field Error:', e);
+
+      console.log('Page Error:', page[f + 'Error']);
+
+      console.log('Validation Errors:', page.validationErrors);
+
+      console.log('Form Valid:', bh.local.isValid);
+
+      console.log('====================================');
       //appendnew_next_validateFieldScript
       return bh;
     } catch (e) {
@@ -503,6 +1047,11 @@ export class claim_intakeComponent {
       page.submitted = false;
       page.submitError = '';
       page.submitSuccess = false;
+      page.submitting = false;
+
+      /* ============================================================
+       * INITIALIZE VALIDATION
+       * ============================================================ */
 
       if (!page.validationErrors) {
         page.validationErrors = {};
@@ -512,8 +1061,13 @@ export class claim_intakeComponent {
 
       let valid = true;
 
+      /* ============================================================
+       * SET ERROR FUNCTION
+       * ============================================================ */
+
       function setError(field, message) {
         page[field + 'Error'] = message || '';
+
         page.validationErrors[field] = message || '';
 
         if (message) {
@@ -521,7 +1075,9 @@ export class claim_intakeComponent {
         }
       }
 
-      /* Clear previous errors */
+      /* ============================================================
+       * CLEAR PREVIOUS FIELD ERRORS
+       * ============================================================ */
 
       const fields = [
         'policyNumber',
@@ -546,7 +1102,9 @@ export class claim_intakeComponent {
         page[field + 'Error'] = '';
       });
 
-      /* Policy */
+      /* ============================================================
+       * POLICY VALIDATION
+       * ============================================================ */
 
       const policyNumber = (page.policyNumber || '').toString().trim();
 
@@ -556,16 +1114,20 @@ export class claim_intakeComponent {
         setError('policyNumber', 'Fetch a valid policy before submitting');
       }
 
-      /* Claimant */
+      /* ============================================================
+       * CLAIMANT TYPE VALIDATION
+       *
+       * Uses dynamic master data:
+       * page.claimantTypes
+       * ============================================================ */
 
       const claimantType = (page.claimantType || '').toString().trim();
 
-      const validClaimantTypes = [
-        'POLICYHOLDER',
-        'DRIVER',
-        'THIRD_PARTY',
-        'REPRESENTATIVE',
-      ];
+      const validClaimantTypes = (page.claimantTypes || []).map(function (
+        item
+      ) {
+        return item.value;
+      });
 
       if (!claimantType) {
         setError('claimantType', 'Claimant Type is required');
@@ -573,7 +1135,9 @@ export class claim_intakeComponent {
         setError('claimantType', 'Select a valid Claimant Type');
       }
 
-      /* Loss Date */
+      /* ============================================================
+       * LOSS DATE VALIDATION
+       * ============================================================ */
 
       if (!page.lossDate) {
         setError('lossDate', 'Loss Date & Time is required');
@@ -597,30 +1161,49 @@ export class claim_intakeComponent {
         }
       }
 
-      /* Loss Location */
+      /* ============================================================
+       * LOSS LOCATION VALIDATION
+       *
+       * Uses dynamic master data:
+       * page.lossLocations
+       * ============================================================ */
 
-      if (!(page.lossLocation || '').toString().trim()) {
+      const lossLocation = (page.lossLocation || '').toString().trim();
+
+      const validLossLocations = (page.lossLocations || []).map(function (
+        item
+      ) {
+        return item.value;
+      });
+
+      if (!lossLocation) {
         setError('lossLocation', 'Loss Location is required');
+      } else if (validLossLocations.indexOf(lossLocation) === -1) {
+        setError('lossLocation', 'Select a valid Loss Location');
       }
 
-      /* Loss Type */
+      /* ============================================================
+       * LOSS TYPE VALIDATION
+       *
+       * Uses dynamic master data:
+       * page.lossTypes
+       * ============================================================ */
 
-      const validLossTypes = [
-        'COLLISION',
-        'THEFT',
-        'FIRE',
-        'FLOOD',
-        'GLASS',
-        'OTHER',
-      ];
+      const lossType = (page.lossType || '').toString().trim();
 
-      if (!page.lossType) {
+      const validLossTypes = (page.lossTypes || []).map(function (item) {
+        return item.value;
+      });
+
+      if (!lossType) {
         setError('lossType', 'Loss Type is required');
-      } else if (validLossTypes.indexOf(page.lossType) === -1) {
+      } else if (validLossTypes.indexOf(lossType) === -1) {
         setError('lossType', 'Select a valid Loss Type');
       }
 
-      /* Loss Description */
+      /* ============================================================
+       * LOSS DESCRIPTION VALIDATION
+       * ============================================================ */
 
       const description = (page.lossDescription || '').toString().trim();
 
@@ -633,23 +1216,40 @@ export class claim_intakeComponent {
         );
       }
 
-      /* Driver */
+      /* ============================================================
+       * DRIVER NAME VALIDATION
+       * ============================================================ */
 
-      if (!(page.driverName || '').toString().trim()) {
+      const driverName = (page.driverName || '').toString().trim();
+
+      if (!driverName) {
         setError('driverName', 'Driver Name is required');
       }
 
-      /* Licence */
+      /* ============================================================
+       * LICENCE STATUS VALIDATION
+       *
+       * Uses dynamic master data:
+       * page.licenceStatuses
+       * ============================================================ */
 
-      const validLicenceStatuses = ['VALID', 'EXPIRED', 'SUSPENDED', 'UNKNOWN'];
+      const licenceStatus = (page.licenceStatus || '').toString().trim();
 
-      if (!page.licenceStatus) {
+      const validLicenceStatuses = (page.licenceStatuses || []).map(function (
+        item
+      ) {
+        return item.value;
+      });
+
+      if (!licenceStatus) {
         setError('licenceStatus', 'Licence Status is required');
-      } else if (validLicenceStatuses.indexOf(page.licenceStatus) === -1) {
+      } else if (validLicenceStatuses.indexOf(licenceStatus) === -1) {
         setError('licenceStatus', 'Select a valid Licence Status');
       }
 
-      /* Yes / No fields */
+      /* ============================================================
+       * YES / NO VALIDATION
+       * ============================================================ */
 
       const yesNoFields = [
         'vehicleDrivable',
@@ -664,10 +1264,16 @@ export class claim_intakeComponent {
         }
       });
 
-      /* Police reference */
+      /* ============================================================
+       * POLICE REPORT REFERENCE
+       * ============================================================ */
 
       if (page.policeReportAvailable === 'YES') {
-        if (!(page.policeReportReference || '').toString().trim()) {
+        const policeReference = (page.policeReportReference || '')
+          .toString()
+          .trim();
+
+        if (!policeReference) {
           setError(
             'policeReportReference',
             'Police / FIR reference is required'
@@ -677,7 +1283,9 @@ export class claim_intakeComponent {
         page.policeReportReference = '';
       }
 
-      /* Estimated Amount */
+      /* ============================================================
+       * ESTIMATED LOSS AMOUNT
+       * ============================================================ */
 
       const amount = Number(page.estimatedAmount);
 
@@ -694,17 +1302,23 @@ export class claim_intakeComponent {
         );
       }
 
-      /* Preferred Contact */
+      /* ============================================================
+       * PREFERRED CONTACT
+       * ============================================================ */
 
       const validContacts = ['EMAIL', 'SMS', 'PHONE'];
 
-      if (!page.preferredContact) {
+      const preferredContact = (page.preferredContact || '').toString().trim();
+
+      if (!preferredContact) {
         setError('preferredContact', 'Preferred Contact is required');
-      } else if (validContacts.indexOf(page.preferredContact) === -1) {
+      } else if (validContacts.indexOf(preferredContact) === -1) {
         setError('preferredContact', 'Select a valid Preferred Contact');
       }
 
-      /* Preferred Contact Value */
+      /* ============================================================
+       * PREFERRED CONTACT VALUE
+       * ============================================================ */
 
       const contactValue = (page.preferredContactValue || '').toString().trim();
 
@@ -713,39 +1327,86 @@ export class claim_intakeComponent {
           'preferredContactValue',
           'Preferred Contact Value is required'
         );
-      } else if (
-        page.preferredContact === 'PHONE' ||
-        page.preferredContact === 'SMS'
-      ) {
+      } else if (preferredContact === 'PHONE' || preferredContact === 'SMS') {
         if (!/^[0-9]{10}$/.test(contactValue)) {
           setError(
             'preferredContactValue',
             'Enter a valid 10-digit mobile number'
           );
         }
-      } else if (page.preferredContact === 'EMAIL') {
+      } else if (preferredContact === 'EMAIL') {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactValue)) {
           setError('preferredContactValue', 'Enter a valid email address');
         }
       }
 
-      /* Final */
+      /* ============================================================
+       * SET FINAL VALIDATION RESULT
+       * ============================================================ */
 
       bh.local.isValid = valid;
 
+      /* ============================================================
+       * LOG VALIDATION RESULT
+       * ============================================================ */
+
+      console.log('========================================');
+
+      console.log('CLAIM FORM VALIDATION RESULT:', bh.local.isValid);
+
+      console.log('VALID VARIABLE:', valid);
+
+      console.log('VALIDATION ERRORS:', page.validationErrors);
+
+      console.log('SUBMIT ERROR BEFORE FINAL:', page.submitError);
+
+      console.log('========================================');
+
+      /* ============================================================
+       * VALIDATION FAILED
+       *
+       * IMPORTANT:
+       * return stops the Script Node here.
+       *
+       * Therefore:
+       * - Submit API will not execute from this flow
+       * - submitError will NOT be cleared
+       * - Snackbar can display page.submitError
+       * ============================================================ */
+
       if (!valid) {
+        page.submitted = false;
+
+        page.submitting = false;
+
+        page.submitSuccess = false;
+
         page.submitError =
           'Please correct the highlighted fields before submitting.';
 
-        page.submitting = false;
+        console.log(
+          'CLAIM SUBMISSION BLOCKED - VALIDATION FAILED',
+          page.submitError
+        );
+
+        console.log('SNACKBAR MESSAGE:', page.submitError);
+      } else {
+        /* ============================================================
+         * VALIDATION SUCCESS
+         * ============================================================ */
+
+        page.submitted = true;
+
+        page.submitting = true;
+
+        page.submitSuccess = true;
+
+        page.submitError = '';
+
+        console.log('CLAIM FORM VALIDATION SUCCESSFUL');
+
+        console.log('bh.local.isValid:', bh.local.isValid);
       }
-
-      console.log('claim form is valid', bh.local.isValid);
-      /* Validation successful */
-
-      page.submitted = true;
-      page.submitting = true;
-      page.submitError = '';
       bh = this.sd_3e6c1de382874126(bh);
       //appendnew_next_validateFNOLSubmit
       return bh;
@@ -758,7 +1419,7 @@ export class claim_intakeComponent {
     try {
       if (
         this.sdService.operators['false'](
-          bh.local.isValid,
+          this.page.submitSuccess,
           undefined,
           undefined,
           undefined
@@ -767,7 +1428,7 @@ export class claim_intakeComponent {
         bh = this.sd_8dff369377c645bf(bh);
       } else if (
         this.sdService.operators['true'](
-          bh.local.isValid,
+          this.page.submitSuccess,
           undefined,
           undefined,
           undefined
