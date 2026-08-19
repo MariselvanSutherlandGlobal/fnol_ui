@@ -121,7 +121,7 @@
           </mat-form-field><mat-error align *ngIf="page.lossTypeError">{{page.lossTypeError}}</mat-error></div>
         <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
             <mat-label>Loss Location</mat-label>
-            <mat-select placeholder="Select Loss Location" [(ngModel)]="page.lossLocation" [required]="false" (selectionChange)="validateField(lossLocation)">
+            <mat-select placeholder="Select Loss Location" [(ngModel)]="page.lossLocation" [required]="false" (selectionChange)="validateField(&apos;lossLocation&apos;)">
               <ng-template ngFor let-option [ngForOf]="page.lossLocations" let-i="index">
                 <mat-option [value]="option.value">{{option.label}}</mat-option>
               </ng-template>

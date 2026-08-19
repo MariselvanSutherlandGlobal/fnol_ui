@@ -5395,7 +5395,7 @@
                                 },
                                 {
                                     "_key": "(selectionChange)",
-                                    "_value": "validateField(lossLocation)",
+                                    "_value": "validateField('lossLocation')",
                                     "_type": "kv",
                                     "_attrDef": "p",
                                     "_customAttributeFlag": "flowpicker",
@@ -5405,7 +5405,7 @@
                                         "activeTree": "pages",
                                         "z": "sd_claimFnol_20260814",
                                         "input": [
-                                            "lossLocation"
+                                            "'lossLocation'"
                                         ]
                                     }
                                 },
