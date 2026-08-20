@@ -866,7 +866,8 @@ export class claim_intakeComponent {
         f === 'thirdPartyFlag' ||
         f === 'injuryFlag' ||
         f === 'policeReportAvailable' ||
-        f === 'repairEstimateAvailable'
+        f === 'repairEstimateAvailable' ||
+        f === 'documentsEvidenceAvailable'
       ) {
         if (s !== 'YES' && s !== 'NO') {
           e = 'Select Yes or No';
@@ -1209,6 +1210,7 @@ export class claim_intakeComponent {
         'injuryFlag',
         'policeReportAvailable',
         'policeReportReference',
+        'documentsEvidenceAvailable',
         'estimatedAmount',
         'preferredContact',
         'preferredContactValue',
@@ -1602,6 +1604,8 @@ export class claim_intakeComponent {
         driverLicenceStatus: page.licenceStatus,
 
         policeReportAvailable: page.policeReportAvailable === 'YES',
+
+        documentsEvidenceAvailable: page.documentsEvidenceAvailable === 'YES',
 
         policeReportReference:
           page.policeReportAvailable === 'YES'

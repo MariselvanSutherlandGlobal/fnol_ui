@@ -193,7 +193,7 @@
         <p>Provide available police and repair evidence references.</p>
       </h3>
       <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
-        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
             <mat-label>Police Report / FIR Available</mat-label>
             <mat-select placeholder="Select Police Report / FIR Available" [(ngModel)]="page.policeReportAvailable" [required]="true" (selectionChange)="onEvidenceChange(&apos;policeReportAvailable&apos;)" id="policeReportAvailable" name="policeReportAvailable">
               <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
@@ -202,13 +202,13 @@
             </mat-select>
 
           </mat-form-field><mat-error align *ngIf="page.policeReportAvailableError">{{page.policeReportAvailableError}}</mat-error></div>
-        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
           <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
             <input matInput [(ngModel)]="page.policeReportReference" name="policeReportReference" type="text" placeholder="Required when report is available" [required]="true" (blur)="validateField(&apos;policeReportReference&apos;)" [disabled]="page.policeReportAvailable !== &apos;YES&apos;" id="policeReportReference">
             <mat-label>Police / FIR Reference</mat-label>
           </mat-form-field><mat-error align *ngIf="page.policeReportReferenceError">{{page.policeReportReferenceError}}</mat-error>
         </div>
-        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
             <mat-label>Repair Estimate Available</mat-label>
             <mat-select placeholder="Select Repair Estimate Available" [(ngModel)]="page.repairEstimateAvailable" [required]="true" (selectionChange)="validateField(&apos;repairEstimateAvailable&apos;)" id="repairEstimateAvailable" name="repairEstimateAvailable">
               <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
@@ -217,7 +217,16 @@
             </mat-select>
 
           </mat-form-field><mat-error align *ngIf="page.repairEstimateAvailableError">{{page.repairEstimateAvailableError}}</mat-error></div>
-        <div fxLayout="column wrap" fxFlex="25" fxLayoutAlign="start stretch" [fxShow]="true">
+        <div fxLayout="column wrap" class="fnol-col-25 fnol-field" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true"><mat-form-field style="box-sizing:border-box;padding:8px;" [appearance]="&apos;legacy&apos;" [floatLabel]="&apos;auto&apos;">
+            <mat-label>Documents / Evidence Available</mat-label>
+            <mat-select placeholder="Select Documents / Evidence Available" [(ngModel)]="page.documentsEvidenceAvailable" [required]="false" id="documentsEvidenceAvailable" name="documentsEvidenceAvailable" (blur)="validateField(&apos;documentsEvidenceAvailable&apos;)">
+              <ng-template ngFor let-option [ngForOf]="page.yesNoOptions" let-i="index">
+                <mat-option [value]="option.value">{{option.label}}</mat-option>
+              </ng-template>
+            </mat-select>
+
+          </mat-form-field></div>
+        <div fxLayout="column wrap" fxFlex="20" fxLayoutAlign="start stretch" [fxShow]="true">
           <mat-form-field style="box-sizing:border-box;padding:8px;" [appearance] [floatLabel]="&apos;auto&apos;" [hideRequiredMarker]="false">
             <input matInput [(ngModel)]="page.evidenceReference" name="evidenceReference" type="text" placeholder="DMS / document reference" [required]="false" (blur)="validateField(&apos;evidenceReference&apos;)" id="evidenceReference">
             <mat-label>Supporting Evidence Reference</mat-label>
@@ -227,6 +236,7 @@
     </div>
     <div fxLayout="column wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
       <h3>
+        <div fxLayout="column wrap" fxLayoutAlign="start stretch" [fxShow]="true"></div>
         <h2>Estimated Loss &amp; Contact Preference</h2>
       </h3>
       <div fxLayout="row wrap" fxFlex="100%" fxLayoutAlign="start stretch" [fxShow]="true">
